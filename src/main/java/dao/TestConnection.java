@@ -22,7 +22,7 @@ public class TestConnection {
 
             EntityManager em = emf.createEntityManager();
 
-            System.out.println("   JPA CONNECTED SUCCESSFULLY!");
+            System.out.println("  - JPA CONNECTED SUCCESSFULLY!");
 
             em.close();
             emf.close();

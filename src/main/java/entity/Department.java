@@ -4,40 +4,42 @@
  */
 package entity;
 import jakarta.persistence.*;
+import java.util.List;
+
 /**
  *
  * @author HP
  */
-
-
 @Entity
 @Table(name = "departments")
 public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "departmentname", nullable = false, length = 50)
-    private String departmentName;
+    private String departmentname;
+
+    @OneToMany(mappedBy = "department")
+    private List<Student> students;
 
     public Department() {
     }
 
-    public Department(String departmentName) {
-        this.departmentName = departmentName;
+    public Department(String departmentname) {
+        this.departmentname = departmentname;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public String getDepartmentName() {
-        return departmentName;
+    public String getDepartmentname() {
+        return departmentname;
     }
 
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
+    public void setDepartmentname(String departmentname) {
+        this.departmentname = departmentname;
     }
 }
-
