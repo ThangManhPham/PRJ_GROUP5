@@ -1,0 +1,17 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Feb 13, 2026, 10:43:28 PM
+    Author     : THANH TAI
+*/
+
+
+body { background-color: #f4f7f9; font-family: sans-serif; }
+.navbar { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.card { border: none; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+/* Định dạng bảng cho Phước, Quý */
+.table thead { background-color: #343a40; color: white; }
+/* Style cho validation */
+.error-border { border: 2px solid #dc3545 !important; }

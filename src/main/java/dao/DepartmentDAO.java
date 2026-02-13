@@ -4,21 +4,12 @@
  */
 
 package dao;
-
 import entity.Department;
 import jakarta.persistence.EntityManager;
 import util.JPAUtil;
 
 import java.util.List;
-
-/**
- *
- * @author HP
- */
-
-public class DepartmentDAO {
-
-    
+public class DepartmentDAO { 
     public List<Department> getAll() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -29,16 +20,12 @@ public class DepartmentDAO {
         em.close();
         return list;
     }
-
-   
     public Department findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         Department d = em.find(Department.class, id);
         em.close();
         return d;
     }
-
-
     public void insert(Department d) {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -48,8 +35,6 @@ public class DepartmentDAO {
 
         em.close();
     }
-
-
     public void update(Department d) {
         EntityManager em = JPAUtil.getEntityManager();
 
