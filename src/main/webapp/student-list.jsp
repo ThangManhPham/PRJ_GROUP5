@@ -4,42 +4,61 @@
     Author     : ACER
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
-<h2>Student Management Page</h2>
+<html>
+<head>
+    <title>Student List</title>
+</head>
+<body>
 
-<p>Welcome: ${sessionScope.user.username}</p>
-<a href="students?action=create">Add Student</a>
-<a href="logout">Logout</a>
+<h2>Student List</h2>
 
-<table border="1">
-<tr>
-    <th>ID</th>
-    <th>StudentID</th>
-    <th>Name</th>
-    <th>GPA</th>
-    <th>Department</th>
-    <th>CreatedBy</th>
-    <th>CreatedAt</th>
-    <th>UpdatedAt</th>
-    <th>Action</th>
-</tr>
+<a href="students?action=create">Add New Student</a>
+<br><br>
 
-<c:forEach var="s" items="${students}">
-<tr>
-    <td>${s.id}</td>
-    <td>${s.studentId}</td>
-    <td>${s.name}</td>
-    <td>${s.gpa}</td>
-    <td>${s.department.departmentname}</td>
-    <td>${s.createdBy}</td>
-    <td>${s.createdAt}</td>
-    <td>${s.updatedAt}</td>
-    <td>
-        <a href="students?action=edit&id=${s.id}">Edit</a>
-        <a href="students?action=delete&id=${s.id}">Delete</a>
-    </td>
-</tr>
-</c:forEach>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>ID</th>
+        <th>Student Code</th>
+        <th>Name</th>
+        <th>GPA</th>
+        <th>Department</th>
+        <th>Action</th>
+    </tr>
+
+    <c:forEach var="s" items="${students}">
+        <tr>
+            <td>${s.id}</td>
+            <td>${s.studentid}</td>
+            <td>${s.name}</td>
+            <td>${s.gpa}</td>
+            <td>${s.department.name}</td>
+            <td>
+                <c:if test="${sessionScope.user.username == s.createdBy}">
+                    <a href="students?action=edit&id=${s.id}">Edit</a>
+                    |
+                    <a href="students?action=delete&id=${s.id}"
+                       onclick="return confirm('Are you sure?')">
+                        Delete
+                    </a>
+                </c:if>
+            </td>
+        </tr>
+    </c:forEach>
 </table>
 
+<br>
+
+<!-- Pagination for Staff -->
+<c:if test="${not empty totalPages}">
+    <c:forEach begin="1" end="${totalPages}" var="i">
+        <a href="students?page=${i}">${i}</a>
+    </c:forEach>
+</c:if>
+
+<br><br>
+<a href="logout">Logout</a>
+
+</body>
+</html>
