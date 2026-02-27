@@ -13,14 +13,19 @@ import jakarta.persistence.Persistence;
  *
  * @author HP
  */
-
 public class JPAUtil {
 
+    // TẠO DUY NHẤT 1 LẦN
     private static final EntityManagerFactory emf =
             Persistence.createEntityManagerFactory("PRJ_Group5_PU");
 
     public static EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-}
 
+    public static void close() {
+        if (emf.isOpen()) {
+            emf.close();
+        }
+    }
+}

@@ -1,9 +1,5 @@
-<%-- 
-    Document   : login
-    Created on : Feb 13, 2026, 10:45:20?PM
-    Author     : THANH TAI
---%>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
     <title>Login</title>
@@ -59,6 +55,14 @@
             text-align: center;
         }
     </style>
+
+    <script>
+        function togglePassword() {
+            var pass = document.getElementById("password");
+            pass.type = (pass.type === "password") ? "text" : "password";
+        }
+    </script>
+
 </head>
 <body>
 
@@ -66,16 +70,22 @@
     <h2>Login</h2>
 
     <form action="login" method="post">
+
         Username:
         <input type="text" name="username"
-               value="${cookie.username.value}" required/>
+               value="${cookie.rememberUser.value}" required/>
 
         Password:
-        <input type="password" name="password" required/>
+        <input type="password" name="password" id="password" required/>
+
+        <div>
+            <input type="checkbox" onclick="togglePassword()">
+            Show Password
+        </div>
 
         <div class="remember">
-            <input type="checkbox" name="remember"
-                <c:if test="${not empty cookie.username.value}">
+            <input type="checkbox" name="remember" value="true"
+                <c:if test="${not empty cookie.rememberUser.value}">
                     checked
                 </c:if>
             />
@@ -85,7 +95,12 @@
         <input type="submit" value="Login"/>
     </form>
 
-    <p class="error">${error}</p>
+    <p class="error">
+        <c:if test="${error != null}">
+            ${error}
+        </c:if>
+    </p>
+
 </div>
 
 </body>

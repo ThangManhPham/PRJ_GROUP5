@@ -1,12 +1,14 @@
 <%-- 
-    Document   : footer
-    Created on : Feb 13, 2026, 10:44:56?PM
+    Document   : header
+    Created on : Feb 13, 2026, 10:44:40?PM
     Author     : THANH TAI
 --%>
 
-</div> <footer class="text-center mt-5 py-3 border-top">
-        <p>&copy; 2026 Student Management System</p>
-    </footer>
-    <script src="${pageContext.request.contextPath}/js/validation.js"></script>
+<hr>
+
+<footer style="text-align:center; padding:10px; background:#ecf0f1;">
+    <p>© 2026 - Student Management System</p>
+</footer>
+
 </body>
 </html>

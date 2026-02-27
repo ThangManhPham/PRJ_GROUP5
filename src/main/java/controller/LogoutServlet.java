@@ -1,20 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
-/**
- *
- * @author HP
- */
+
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
 
@@ -23,10 +14,33 @@ public class LogoutServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Xóa session
-        request.getSession().invalidate();
+        // 1. Lấy session hiện tại (nếu có)
+        HttpSession session = request.getSession(false);
 
-        // Quay về trang login
+        if (session != null) {
+            session.invalidate(); // Hủy session
+        }
+
+        // 2. Xóa cookie nếu có lưu username hoặc password
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("username") ||
+                    cookie.getName().equals("password")) {
+
+                    cookie.setValue("");
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                }
+            }
+        }
+
+        // 3. Chống back sau logout
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
+        // 4. Quay về login
         response.sendRedirect(request.getContextPath() + "/login");
     }
 }

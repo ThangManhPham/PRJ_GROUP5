@@ -41,5 +41,8 @@ public class Department {
 
     public void setDepartmentname(String departmentname) {
         this.departmentname = departmentname;
-    }
+    } 
+    public void setId(Integer id) {
+    this.id = id;
+}
 }

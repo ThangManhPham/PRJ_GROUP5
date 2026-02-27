@@ -1,55 +1,77 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
 import dao.UserAccountDAO;
 import entity.UserAccount;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
-/**
- *
- * @author HP
- */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-            throws ServletException, IOException {
+    private UserAccountDAO userDAO;
 
-        request.getRequestDispatcher("login.jsp")
-                .forward(request, response);
+    @Override
+    public void init() {
+        userDAO = new UserAccountDAO();
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+    }
 
-        UserAccountDAO dao = new UserAccountDAO();
-        UserAccount user = dao.checkLogin(username, password);
+   @Override
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-        if (user != null) {
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+    String remember = request.getParameter("remember");
 
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
+    UserAccount user = userDAO.checkLogin(username, password);
 
-            response.sendRedirect("students");
+    if (user != null) {
 
-        } else {
-            request.setAttribute("error", "Invalid username or password");
-            request.getRequestDispatcher("login.jsp")
-                    .forward(request, response);
+        if (user.getRole() == 3) {
+            request.setAttribute("error", "You have no permission to access this function!");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
+
+        // Xóa session cũ
+        HttpSession oldSession = request.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
+
+        // Tạo session mới
+        HttpSession session = request.getSession(true);
+        session.setAttribute("user", user);
+        session.setMaxInactiveInterval(30 * 60);
+
+        // ===== REMEMBER ME =====
+        if ("true".equals(remember)) {
+            Cookie cookie = new Cookie("rememberUser", username);
+            cookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+            cookie.setHttpOnly(true);
+            response.addCookie(cookie);
+        } else {
+            Cookie cookie = new Cookie("rememberUser", "");
+            cookie.setMaxAge(0); // Xóa cookie
+            response.addCookie(cookie);
+        }
+
+        response.sendRedirect("student");
+
+    } else {
+        request.setAttribute("error", "Username or password is invalid!");
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
+}
 }

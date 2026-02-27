@@ -5,7 +5,8 @@
 package entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 /**
  *
@@ -17,95 +18,43 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
-    @Column(name = "studentid", nullable = false, unique = true, length = 20)
-    private String studentid;
-
-    @Column(name = "name", nullable = false, length = 50)
+    private String studentId;
     private String name;
-
-    @Column(name = "gpa")
-    private Double gpa;
-
-    // Many students -> One department
-    @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
+    private double gpa;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_id")
     private Department department;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private Date updatedAt;
-
-    @Column(name = "created_by", length = 50)
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String createdBy;
-
-    public Student() {
-    }
 
     // ===== Getter & Setter =====
 
-    public Integer getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public String getStudentid() {
-        return studentid;
-    }
+    public String getStudentId() { return studentId; }
+    public void setStudentId(String studentId) { this.studentId = studentId; }
 
-    public void setStudentid(String studentid) {
-        this.studentid = studentid;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public double getGpa() { return gpa; }
+    public void setGpa(double gpa) { this.gpa = gpa; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public Department getDepartment() { return department; }
+    public void setDepartment(Department department) { this.department = department; }
 
-    public Double getGpa() {
-        return gpa;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public void setGpa(Double gpa) {
-        this.gpa = gpa;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
+    public String getCreatedBy() { return createdBy; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 }

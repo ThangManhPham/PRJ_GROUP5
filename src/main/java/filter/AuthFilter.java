@@ -1,25 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package filter;
 
+import entity.UserAccount;
 import jakarta.servlet.*;
-import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
-/**
- *
- * @author HP
- */
 
 @WebFilter("/*")
 public class AuthFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
+    public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain)
             throws IOException, ServletException {
 
@@ -27,18 +19,42 @@ public class AuthFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         String uri = req.getRequestURI();
+        String contextPath = req.getContextPath();
+        uri = uri.substring(contextPath.length());
 
-        if (uri.contains("login") || uri.contains("login.jsp") || uri.contains("css")) {
+        HttpSession session = req.getSession(false);
+
+        // ===== Allow login & static files =====
+        if (uri.equals("/login") ||
+            uri.startsWith("/css/") ||
+            uri.startsWith("/js/") ||
+            uri.startsWith("/images/")) {
+
             chain.doFilter(request, response);
             return;
         }
 
-        HttpSession session = req.getSession(false);
-
-        if (session != null && session.getAttribute("user") != null) {
-            chain.doFilter(request, response);
-        } else {
-            res.sendRedirect(req.getContextPath() + "/login");
+        // ===== Not logged in =====
+        if (session == null || session.getAttribute("user") == null) {
+            res.sendRedirect(contextPath + "/login");
+            return;
         }
+
+        UserAccount user = (UserAccount) session.getAttribute("user");
+        int role = user.getRole();
+
+        // ===== Department: Manager only =====
+        if (uri.startsWith("/department") && role != 1) {
+            res.sendRedirect(contextPath + "/accessDenied.jsp");
+            return;
+        }
+
+        // ===== Student: Manager + Staff =====
+        if (uri.startsWith("/student") && !(role == 1 || role == 2)) {
+            res.sendRedirect(contextPath + "/accessDenied.jsp");
+            return;
+        }
+
+        chain.doFilter(request, response);
     }
 }

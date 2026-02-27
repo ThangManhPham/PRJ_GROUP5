@@ -1,63 +1,96 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package dao;
+
 import entity.Department;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import java.util.List;
 import util.JPAUtil;
 
-import java.util.List;
-public class DepartmentDAO { 
+public class DepartmentDAO {
+
+    // =========================
+    // READ ALL
+    // =========================
     public List<Department> getAll() {
         EntityManager em = JPAUtil.getEntityManager();
-
-        List<Department> list =
-                em.createQuery("SELECT d FROM Department d", Department.class)
-                        .getResultList();
-
-        em.close();
-        return list;
+        try {
+            TypedQuery<Department> query =
+                    em.createQuery("SELECT d FROM Department d", Department.class);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
     }
+
+    // =========================
+    // FIND BY ID
+    // =========================
     public Department findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
-        Department d = em.find(Department.class, id);
-        em.close();
-        return d;
+        try {
+            return em.find(Department.class, id);
+        } finally {
+            em.close();
+        }
     }
-    public void insert(Department d) {
+
+    // =========================
+    // INSERT
+    // =========================
+    public void insert(Department department) {
         EntityManager em = JPAUtil.getEntityManager();
-
-        em.getTransaction().begin();
-        em.persist(d);
-        em.getTransaction().commit();
-
-        em.close();
+        try {
+            em.getTransaction().begin();
+            em.persist(department);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
     }
-    public void update(Department d) {
+
+    // =========================
+    // UPDATE
+    // =========================
+    public void update(Department department) {
         EntityManager em = JPAUtil.getEntityManager();
-
-        em.getTransaction().begin();
-        em.merge(d);
-        em.getTransaction().commit();
-
-        em.close();
+        try {
+            em.getTransaction().begin();
+            em.merge(department);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 
-
+    // =========================
+    // DELETE
+    // =========================
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
-
-        em.getTransaction().begin();
-
-        Department d = em.find(Department.class, id);
-        if (d != null) {
-            em.remove(d);
+        try {
+            Department department = em.find(Department.class, id);
+            if (department != null) {
+                em.getTransaction().begin();
+                em.remove(department);
+                em.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
         }
-
-        em.getTransaction().commit();
-        em.close();
     }
 }
-
