@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Truy c?p b? t? ch?i</title>
+    <title>Access Denied</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -82,19 +82,18 @@
             </svg>
         </div>
 
-        <h1 class="text-3xl font-bold text-white mb-2">Truy c?p b? t? ch?i</h1>
+        <h1 class="text-3xl font-bold text-white mb-2">Access Denied</h1>
         <p class="text-gray-400 mb-8 leading-relaxed">
-            R?t ti?c! B?n không có quy?n truy c?p vaò khu v?c này. Vui lòng liên h? qu?n tr? viên ho?c quay l?i trang tr??c.
+            Sorry! You do not have permission to access this area. Please contact the administrator or return to the previous page.
         </p>
 
-        <!-- S? d?ng ???ng d?n t??ng ??i ho?c g?i logout ?? xóa session c? -->
         <a href="logout" class="btn-back">
-            Quay l?i trang ??ng nh?p
+            Back to Login Page
         </a>
 
         <div class="mt-6">
             <a href="javascript:history.back()" class="text-sm text-gray-500 hover:text-indigo-400 transition-colors">
-                Quay l?i trang tr??c
+                Go Back
             </a>
         </div>
     </div>
