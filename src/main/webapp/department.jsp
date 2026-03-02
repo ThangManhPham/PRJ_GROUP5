@@ -101,8 +101,15 @@
 <!-- ===== JAVASCRIPT VALIDATION ===== -->
 <script>
 function validateDepartment() {
+    let input = document.querySelector("input[name='departmentname']");
     let name = document.querySelector("input[name='departmentname']").value.trim();
 
+ if (name == null || name.trim().length === 0) {
+        alert("Department name không được để trống hoặc chỉ có khoảng trắng!");
+        input.focus();
+        return false;
+    }
+    
     if (name.length < 5 || name.length > 50) {
         alert("Department name must be between 5 and 50 characters!");
         return false;

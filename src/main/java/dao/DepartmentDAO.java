@@ -33,6 +33,48 @@ public class DepartmentDAO {
             em.close();
         }
     }
+     public boolean existsByNameIgnoreCase(String name) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String norm = name.trim().toLowerCase();
+            Long cnt = em.createQuery(
+                    "SELECT COUNT(d) FROM Department d " +
+                    "WHERE LOWER(TRIM(d.departmentname)) = :n",
+                    Long.class
+            ).setParameter("n", norm).getSingleResult();
+            return cnt > 0;
+        } finally {
+            em.close();
+        }
+    }
+     public boolean existsByNameIgnoreCaseExceptId(String name, int id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String norm = name.trim().toLowerCase();
+            Long cnt = em.createQuery(
+                    "SELECT COUNT(d) FROM Department d " +
+                    "WHERE d.id <> :id AND LOWER(TRIM(d.departmentname)) = :n",
+                    Long.class
+            ).setParameter("id", id)
+             .setParameter("n", norm)
+             .getSingleResult();
+            return cnt > 0;
+        } finally {
+            em.close();
+        }
+    }
+     public long countStudentsInDepartment(int depId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return em.createQuery(
+                    "SELECT COUNT(s) FROM Student s WHERE s.department.id = :depId",
+                    Long.class
+            ).setParameter("depId", depId)
+             .getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
 
     // =========================
     // INSERT

@@ -64,6 +64,12 @@ public class DepartmentServlet extends HttpServlet {
         throws ServletException, IOException {
 
     String name = request.getParameter("departmentname");
+    
+    if (name == null || name.trim().isEmpty()) {
+            request.setAttribute("error", "Department name không được để trống!");
+            listDepartments(request, response);
+            return;
+        }
 
     if (name == null || name.trim().length() < 5 || name.trim().length() > 50) {
 
@@ -73,6 +79,15 @@ public class DepartmentServlet extends HttpServlet {
         listDepartments(request, response); // forward lại trang
         return;
     }
+    
+     String trimmed = name.trim();
+        if (dao.existsByNameIgnoreCase(trimmed)) {
+            request.setAttribute("error", "Department name đã tồn tại!");
+            listDepartments(request, response);
+            return;
+        }
+    
+    
 
     Department d = new Department();
     d.setDepartmentname(name.trim());
@@ -84,13 +99,27 @@ public class DepartmentServlet extends HttpServlet {
 
     private void updateDepartment(HttpServletRequest request,
                                   HttpServletResponse response)
-            throws IOException {
+            throws  IOException, ServletException {
 
         int id = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("departmentname");
+        
+        if (name == null || name.trim().isEmpty()) {
+            request.setAttribute("error", "Department name không được để trống!");
+            // giữ form edit + list
+            showEditForm(request, response);
+            return;
+        }
 
         if (name == null || name.trim().length() < 5 || name.trim().length() > 50) {
             response.sendRedirect("department?error=invalid");
+            return;
+        }
+        
+        String trimmed = name.trim();
+        if (dao.existsByNameIgnoreCaseExceptId(trimmed, id)) {
+            request.setAttribute("error", "Không được đổi thành tên Department đã tồn tại!");
+            showEditForm(request, response);
             return;
         }
 
