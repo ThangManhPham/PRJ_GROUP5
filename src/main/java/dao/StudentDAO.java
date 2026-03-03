@@ -114,9 +114,12 @@ public class StudentDAO {
     public boolean existsStudentId(String studentId) {
         EntityManager em = emf.createEntityManager();
         try {
+            String norm = studentId == null ? "" : studentId.trim().toLowerCase();
             Long cnt = em.createQuery(
-                    "SELECT COUNT(s) FROM Student s WHERE s.studentId = :sid", Long.class)
-                    .setParameter("sid", studentId)
+                    "SELECT COUNT(s) FROM Student s "
+                    + "WHERE LOWER(TRIM(s.studentId)) = :sid",
+                    Long.class
+            ).setParameter("sid", norm)
                     .getSingleResult();
             return cnt != null && cnt > 0;
         } finally {
@@ -138,4 +141,5 @@ public class StudentDAO {
             em.close();
         }
     }
+    
 }
