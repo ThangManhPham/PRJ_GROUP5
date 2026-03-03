@@ -8,17 +8,17 @@ import java.util.List;
 
 public class StudentDAO {
 
-    private EntityManagerFactory emf =
-            Persistence.createEntityManagerFactory("PRJ_Group5_PU");
+    private EntityManagerFactory emf
+            = Persistence.createEntityManagerFactory("PRJ_Group5_PU");
 
     // ===============================
     // 1. STAFF – GET ALL
     // ===============================
     public List<Student> getAll() {
         EntityManager em = emf.createEntityManager();
-        List<Student> list =
-                em.createQuery("SELECT s FROM Student s", Student.class)
-                  .getResultList();
+        List<Student> list
+                = em.createQuery("SELECT s FROM Student s", Student.class)
+                        .getResultList();
         em.close();
         return list;
     }
@@ -28,10 +28,10 @@ public class StudentDAO {
     // ===============================
     public List<Student> getTop5ByGpa() {
         EntityManager em = emf.createEntityManager();
-        List<Student> list =
-                em.createQuery("SELECT s FROM Student s ORDER BY s.gpa DESC", Student.class)
-                  .setMaxResults(5)
-                  .getResultList();
+        List<Student> list
+                = em.createQuery("SELECT s FROM Student s ORDER BY s.gpa DESC", Student.class)
+                        .setMaxResults(5)
+                        .getResultList();
         em.close();
         return list;
     }
@@ -55,7 +55,9 @@ public class StudentDAO {
 
         try {
             tx.begin();
-            s.setCreatedAt(LocalDateTime.now());
+            LocalDateTime now = LocalDateTime.now();
+            s.setCreatedAt(now);
+            s.setUpdatedAt(now); 
             em.persist(s);
             tx.commit();
         } catch (Exception e) {
@@ -107,4 +109,37 @@ public class StudentDAO {
             em.close();
         }
     }
+    // === CHECK TRÙNG StudentID (create) ===
+
+    public boolean existsStudentId(String studentId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            String norm = studentId == null ? "" : studentId.trim().toLowerCase();
+            Long cnt = em.createQuery(
+                    "SELECT COUNT(s) FROM Student s "
+                    + "WHERE LOWER(TRIM(s.studentId)) = :sid",
+                    Long.class
+            ).setParameter("sid", norm)
+                    .getSingleResult();
+            return cnt != null && cnt > 0;
+        } finally {
+            em.close();
+        }
+    }
+
+// === CHECK TRÙNG StudentID (update) - loại trừ chính nó ===
+    public boolean existsStudentIdExceptId(String studentId, int id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Long cnt = em.createQuery(
+                    "SELECT COUNT(s) FROM Student s WHERE s.studentId = :sid AND s.id <> :id", Long.class)
+                    .setParameter("sid", studentId)
+                    .setParameter("id", id)
+                    .getSingleResult();
+            return cnt != null && cnt > 0;
+        } finally {
+            em.close();
+        }
+    }
+    
 }

@@ -4,6 +4,8 @@
 <%@ include file="common/header.jsp" %>
 
 <!DOCTYPE html>
+<c:set var="errors" value="${requestScope.errors}" />
+<c:set var="isUpdate" value="${not empty student and student.id > 0}" />
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -13,6 +15,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        .input-error {
+            border-color: #ef4444 !important; /* đỏ */
+        }
+        .error-text {
+            color: #fca5a5; /* đỏ nhạt */
+            font-size: 0.75rem;
+            margin-top: 0.35rem;
+            margin-left: 0.25rem;
+        }
         body {
             background-color: #0f172a; 
             background-image: 
@@ -120,43 +131,70 @@
                             <input type="hidden" name="id" value="${student.id}" />
                         </c:if>
                         
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 ml-1">Mã Số Sinh Viên (studentId)</label>
-                            <input type="text" name="studentId" 
-                                   class="input-field w-full px-5 py-3 rounded-xl text-base"
-                                   placeholder="Ví dụ: SE123456"
-                                   value="${student.studentId}"
-                                   ${not empty student ? 'readonly opacity-50' : ''} required />
-                        </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 ml-1">
+                                    Mã Số Sinh Viên (studentId)
+                                </label>
 
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 ml-1">Họ và Tên</label>
-                            <input type="text" name="name" 
-                                   class="input-field w-full px-5 py-3 rounded-xl text-base"
-                                   placeholder="Nguyễn Văn A"
-                                   value="${student.name}"
-                                   required />
-                        </div>
+                                <input type="text" name="studentId"
+                                    class="input-field w-full px-5 py-3 rounded-xl text-base
+                                    ${errors.studentId != null ? 'input-error' : ''}
+                                    ${isUpdate ? 'opacity-50' : ''}"
+                                    placeholder="Ví dụ: SE123456"
+                                    value="${not empty student ? student.studentId : ''}"
+                                    ${isUpdate ? 'readonly' : ''} />
+
+                                <c:if test="${errors.studentId != null}">
+                                    <div class="error-text">${errors.studentId}</div>
+                                </c:if>
+                            </div>
+                                       <div>
+                                           <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 ml-1">Họ và Tên</label>
+
+                                           <input type="text" name="name"
+                                                  class="input-field w-full px-5 py-3 rounded-xl text-base
+                                                  ${errors.name != null ? 'input-error' : ''}"
+                                                  placeholder="Nguyễn Văn A"
+                                                  value="${not empty student ? student.name : ''}" />
+
+                                           <c:if test="${errors.name != null}">
+                                               <div class="error-text">${errors.name}</div>
+                                           </c:if>
+                                       </div>
+
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 ml-1">Điểm GPA</label>
-                                <input type="number" step="0.1" min="0" max="10" name="gpa" 
-                                       class="input-field w-full px-5 py-3 rounded-xl text-base"
+
+                                <input type="number" step="0.1" min="0" max="10" name="gpa"
+                                       class="input-field w-full px-5 py-3 rounded-xl text-base
+                                       ${errors.gpa != null ? 'input-error' : ''}"
                                        placeholder="0.0"
-                                       value="${student.gpa}"
-                                       required />
+                                       value="${not empty student ? student.gpa : ''}" />
+
+                                <c:if test="${errors.gpa != null}">
+                                    <div class="error-text">${errors.gpa}</div>
+                                </c:if>
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 ml-1">Khoa</label>
-                                <select name="department_id" class="input-field w-full px-5 py-3 rounded-xl text-base appearance-none cursor-pointer" required>
+
+                                <select name="departmentId"
+                                        class="input-field w-full px-5 py-3 rounded-xl text-base appearance-none cursor-pointer
+                                        ${errors.departmentId != null ? 'input-error' : ''}">
                                     <option value="">-- Chọn Khoa --</option>
                                     <c:forEach var="dept" items="${departments}">
-                                        <option value="${dept.id}" ${student.department.id == dept.id ? 'selected' : ''}>
+                                        <option value="${dept.id}"
+                                                ${(not empty student && not empty student.department && student.department.id == dept.id) ? 'selected' : ''}>
                                             ${dept.departmentname}
                                         </option>
                                     </c:forEach>
                                 </select>
+
+                                <c:if test="${errors.departmentId != null}">
+                                    <div class="error-text">${errors.departmentId}</div>
+                                </c:if>
                             </div>
                         </div>
 
@@ -177,7 +215,7 @@
                     <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
                         <h3 class="text-xl font-bold text-white">Danh Sách Hiện Tại</h3>
                         <span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full border border-purple-500/30">
-                            ${not empty list ? list.size() : 0} sinh viên
+                            ${not empty students ? students.size() : 0} sinh viên
                         </span>
                     </div>
                     
@@ -193,7 +231,7 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-white/5">
-                                <c:forEach var="s" items="${list}">
+                                <c:forEach var="s" items="${students}">
                                     <tr class="hover:bg-white/[0.02] transition-colors group">
                                         <td class="px-6 py-5 text-sm font-mono text-purple-300 font-bold">${s.studentId}</td>
                                         <td class="px-6 py-5">
@@ -220,7 +258,7 @@
                                 </c:forEach>
                             </tbody>
                         </table>
-                        <c:if test="${empty list}">
+                        <c:if test="${empty students}">
                             <div class="py-20 text-center text-gray-500">
                                 <div class="flex flex-col items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

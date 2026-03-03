@@ -25,11 +25,10 @@ public class AuthFilter implements Filter {
         HttpSession session = req.getSession(false);
 
         // ===== Allow login & static files =====
-        if (uri.equals("/login") ||
-            uri.startsWith("/css/") ||
-            uri.startsWith("/js/") ||
-            uri.startsWith("/images/")) {
-
+       if (uri.equals("/login")
+                || uri.startsWith("/css/") || uri.startsWith("/CSS/")
+                || uri.startsWith("/js/") || uri.startsWith("/JS/")
+                || uri.startsWith("/images/")) {
             chain.doFilter(request, response);
             return;
         }
