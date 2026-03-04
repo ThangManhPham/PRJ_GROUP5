@@ -26,6 +26,7 @@ public class AuthFilter implements Filter {
 
         // ===== Allow login & static files =====
         if (uri.equals("/login") ||
+            uri.equals("/register") ||
             uri.startsWith("/css/") ||
             uri.startsWith("/js/") ||
             uri.startsWith("/images/")) {

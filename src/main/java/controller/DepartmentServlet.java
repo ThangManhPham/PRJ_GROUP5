@@ -42,13 +42,29 @@ public class DepartmentServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        if (action.equals("add")) {
-            insertDepartment(request, response);
-        } else if (action.equals("update")) {
-            updateDepartment(request, response);
-        }
+        if ("add".equals(action)) {
+    insertDepartment(request, response);
+} else if ("update".equals(action)) {
+    updateDepartment(request, response);
+}
+    }
+    private String validateDepartmentName(String name) {
+    if (name == null) {
+        return "Department Name không được để trống!";
     }
 
+    String trimmed = name.trim();
+
+    if (trimmed.isEmpty()) {
+        return "Department Name không được để trống hoặc toàn khoảng trắng!";
+    }
+
+    if (trimmed.length() < 2) {
+        return "Department Name phải có tối thiểu 2 ký tự!";
+    }
+
+    return null; // hợp lệ
+}
     private void listDepartments(HttpServletRequest request,
                                  HttpServletResponse response)
             throws ServletException, IOException {
@@ -58,88 +74,89 @@ public class DepartmentServlet extends HttpServlet {
         request.getRequestDispatcher("department.jsp")
                 .forward(request, response);
     }
-
- private void insertDepartment(HttpServletRequest request,
+private void insertDepartment(HttpServletRequest request,
                               HttpServletResponse response)
         throws ServletException, IOException {
 
     String name = request.getParameter("departmentname");
-    
-    if (name == null || name.trim().isEmpty()) {
-            request.setAttribute("error", "Department name không được để trống!");
-            listDepartments(request, response);
-            return;
-        }
 
-    if (name == null || name.trim().length() < 5 || name.trim().length() > 50) {
-
-        request.setAttribute("error",
-                "Department name must be between 5 and 50 characters!");
-
-        listDepartments(request, response); // forward lại trang
+    // 1) Validate cơ bản
+    String errorMsg = validateDepartmentName(name);
+    if (errorMsg != null) {
+        request.setAttribute("error", errorMsg);
+        listDepartments(request, response);
         return;
     }
-    
-     String trimmed = name.trim();
-        if (dao.existsByNameIgnoreCase(trimmed)) {
-            request.setAttribute("error", "Department name đã tồn tại!");
-            listDepartments(request, response);
-            return;
-        }
-    
-    
 
+    String trimmed = name.trim();
+
+    // 2) Check trùng tên (không phân biệt hoa thường)
+    if (dao.existsByNameIgnoreCase(trimmed)) {
+        request.setAttribute("error", "Department Name đã tồn tại (không phân biệt hoa thường)!");
+        listDepartments(request, response);
+        return;
+    }
+
+    // 3) Insert
     Department d = new Department();
-    d.setDepartmentname(name.trim());
-
+    d.setDepartmentname(trimmed);
     dao.insert(d);
 
     response.sendRedirect("department");
 }
+ private void updateDepartment(HttpServletRequest request,
+                              HttpServletResponse response)
+        throws IOException, ServletException {
 
-    private void updateDepartment(HttpServletRequest request,
-                                  HttpServletResponse response)
-            throws  IOException, ServletException {
+    int id = Integer.parseInt(request.getParameter("id"));
+    String name = request.getParameter("departmentname");
 
-        int id = Integer.parseInt(request.getParameter("id"));
-        String name = request.getParameter("departmentname");
-        
-        if (name == null || name.trim().isEmpty()) {
-            request.setAttribute("error", "Department name không được để trống!");
-            // giữ form edit + list
-            showEditForm(request, response);
-            return;
-        }
-
-        if (name == null || name.trim().length() < 5 || name.trim().length() > 50) {
-            response.sendRedirect("department?error=invalid");
-            return;
-        }
-        
-        String trimmed = name.trim();
-        if (dao.existsByNameIgnoreCaseExceptId(trimmed, id)) {
-            request.setAttribute("error", "Không được đổi thành tên Department đã tồn tại!");
-            showEditForm(request, response);
-            return;
-        }
-
-        Department d = new Department();
-        d.setId(id);
-        d.setDepartmentname(name.trim());
-
-        dao.update(d);
-
-        response.sendRedirect("department");
+    // 1) Validate cơ bản
+    String errorMsg = validateDepartmentName(name);
+    if (errorMsg != null) {
+        request.setAttribute("error", errorMsg);
+        showEditForm(request, response);
+        return;
     }
 
-    private void deleteDepartment(HttpServletRequest request,
-                                  HttpServletResponse response)
-            throws IOException {
-
-        int id = Integer.parseInt(request.getParameter("id"));
-        dao.delete(id);
-        response.sendRedirect("department");
+    String trimmed = name.trim();
+    
+    // 2) Check trùng tên (bỏ qua chính nó)
+    if (dao.existsByNameIgnoreCaseExceptId(trimmed, id)) {
+        request.setAttribute("error", "Không được đổi thành Department Name đã tồn tại!");
+        showEditForm(request, response);
+        return;
     }
+
+    // 3) Update
+    Department d = new Department();
+    d.setId(id);
+    d.setDepartmentname(trimmed);
+    dao.update(d);
+
+    response.sendRedirect("department");
+}
+
+    
+private void deleteDepartment(HttpServletRequest request,
+                              HttpServletResponse response)
+        throws IOException, ServletException {
+
+    int id = Integer.parseInt(request.getParameter("id"));
+
+    // Check trước khi xóa
+    long studentCount = dao.countStudentsInDepartment(id);
+    if (studentCount > 0) {
+        request.setAttribute("error",
+                "Không thể xóa Department vì đang có Student thuộc Department này!");
+        listDepartments(request, response); // forward lại trang + hiện lỗi
+        return;
+    }
+
+    dao.delete(id);
+    response.sendRedirect("department");
+}
+    
 
     private void showEditForm(HttpServletRequest request,
                               HttpServletResponse response)
