@@ -25,10 +25,19 @@ public class AuthFilter implements Filter {
         HttpSession session = req.getSession(false);
 
         // ===== Allow login & static files =====
+<<<<<<< HEAD
        if (uri.equals("/login")
                 || uri.startsWith("/css/") || uri.startsWith("/CSS/")
                 || uri.startsWith("/js/") || uri.startsWith("/JS/")
                 || uri.startsWith("/images/")) {
+=======
+        if (uri.equals("/login") ||
+            uri.equals("/register") ||
+            uri.startsWith("/css/") ||
+            uri.startsWith("/js/") ||
+            uri.startsWith("/images/")) {
+
+>>>>>>> 62241a01d11c1d904bec7872ac1dfa7486e396a5
             chain.doFilter(request, response);
             return;
         }
