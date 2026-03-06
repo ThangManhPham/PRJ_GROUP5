@@ -7,22 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
         :root {
-            --bg-gradient-light: linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 100%);
+            --bg-gradient-light: linear-gradient(135deg, #f0f4ff 0%, #c7d2fe 100%);
             --bg-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             --primary-indigo: #6366f1;
             --text-main: #ffffff;
             --text-sub: rgba(255, 255, 255, 0.6);
             --card-bg: rgba(15, 23, 42, 0.6);
             --error-red: #fb7185;
+            --card-border: rgba(251, 113, 133, 0.3);
         }
 
+        /* T?ng c??ng ?? t??ng ph?n cho Light Mode */
         .light {
-            --text-main: #1e1b4b;
-            --text-sub: rgba(30, 27, 75, 0.7);
-            --card-bg: rgba(255, 255, 255, 0.4);
+            --text-main: #0f172a;
+            --text-sub: #334155;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: #f43f5e; /* Vi?n ?? h?ng ??m h?n khi ? Light Mode */
         }
 
         body {
@@ -63,9 +66,10 @@
         }
 
         .light .floating-tag {
-            background: rgba(255, 255, 255, 0.4);
-            border-color: rgba(99, 102, 241, 0.15);
-            color: var(--primary-indigo);
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px solid #6366f1; /* Vi?n ??m h?n cho tag ? Light Mode */
+            color: #4338ca;
+            font-weight: 800;
         }
 
         @keyframes floatUpRight {
@@ -80,7 +84,7 @@
             background: var(--card-bg);
             backdrop-filter: blur(40px);
             -webkit-backdrop-filter: blur(40px);
-            border: 2px solid rgba(251, 113, 133, 0.3);
+            border: 2px solid var(--card-border);
             border-radius: 40px;
             padding: 45px 40px;
             width: 100%;
@@ -93,12 +97,16 @@
         }
 
         .light .glass-card {
-            border-color: rgba(251, 113, 133, 0.4);
-            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+            border-width: 3px; /* Vi?n dày h?n ? Light Mode */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
-        .theme-text-main { color: var(--text-main); transition: color 0.5s ease; }
-        .theme-text-sub { color: var(--text-sub); transition: color 0.5s ease; }
+        /* ??nh ngh?a font-weight in ??m cho Light Mode */
+        .theme-text-main { color: var(--text-main); transition: all 0.5s ease; font-weight: 700; }
+        .light .theme-text-main { font-weight: 900; }
+
+        .theme-text-sub { color: var(--text-sub); transition: all 0.5s ease; font-weight: 400; }
+        .light .theme-text-sub { font-weight: 700; }
 
         .icon-box {
             background: rgba(251, 113, 133, 0.1);
@@ -110,15 +118,20 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            border: 1px solid rgba(251, 113, 133, 0.2);
+            border: 2px solid rgba(251, 113, 133, 0.4);
             font-size: 2.5rem;
+        }
+
+        .light .icon-box {
+            background: rgba(251, 113, 133, 0.2);
+            border: 3px solid #f43f5e;
         }
 
         .btn-base {
             width: 100%;
             padding: 16px;
             border-radius: 16px;
-            font-weight: 700;
+            font-weight: 800; /* Font ch? m?c ??nh ??m */
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: all 0.3s ease;
@@ -136,28 +149,21 @@
             margin-bottom: 12px;
         }
 
-        .primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px -5px rgba(79, 70, 229, 0.5);
-            filter: brightness(1.1);
-        }
-
         .secondary-btn {
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: var(--text-main);
         }
 
         .light .secondary-btn {
-            background: rgba(30, 27, 75, 0.05);
-            border-color: rgba(30, 27, 75, 0.1);
-            color: var(--primary-indigo);
+            background: #ffffff;
+            border: 2.5px solid #4f46e5; /* Vi?n xanh ??m rõ ràng ? Light Mode */
+            color: #4f46e5;
         }
 
         .secondary-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary-indigo);
             transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .theme-toggle {
@@ -165,7 +171,7 @@
             top: 25px;
             right: 25px;
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid var(--card-border);
             width: 48px;
             height: 48px;
             border-radius: 14px;
@@ -197,8 +203,8 @@
         <div class="floating-tag" style="bottom: 10%; left: 20%; animation-delay: -4s;">Phuoc</div>
         <div class="floating-tag" style="bottom: 25%; left: 30%; animation-delay: -6s;">Thang</div>
         <div class="floating-tag" style="bottom: 5%; left: 45%; animation-delay: -8s;">Tai</div>
-        <div class="floating-tag font-bold text-orange-400" style="bottom: 20%; left: 50%; animation-delay: -1s;">PRF192</div>
-        <div class="floating-tag font-bold text-red-400" style="bottom: 40%; left: 80%; animation-delay: -2.5s;">DBI202</div>
+        <div class="floating-tag font-bold text-orange-400 light:text-orange-700" style="bottom: 20%; left: 50%; animation-delay: -1s;">PRF192</div>
+        <div class="floating-tag font-bold text-red-400 light:text-red-700" style="bottom: 40%; left: 80%; animation-delay: -2.5s;">DBI202</div>
         <div class="floating-tag font-bold text-orange-500 border-orange-500/30" style="bottom: 50%; left: 10%; animation-delay: -10s; font-size: 1rem;">FPTU</div>
     </div>
 
@@ -214,8 +220,8 @@
                 <i class="fas fa-shield-virus"></i>
             </div>
 
-            <h1 class="text-3xl font-bold mb-3 tracking-tight theme-text-main">Access Denied</h1>
-            <p class="theme-text-sub font-light mb-10 leading-relaxed px-4">
+            <h1 class="text-3xl mb-3 tracking-tight theme-text-main">Access Denied</h1>
+            <p class="theme-text-sub mb-10 leading-relaxed px-4">
                 Sorry! You do not have permission to access this area. Please contact the administrator or return to the previous page.
             </p>
 
@@ -228,8 +234,8 @@
                 </a>
             </div>
 
-            <div class="mt-10 pt-6 border-t border-indigo-500/10">
-                <p class="theme-text-sub text-[8px] uppercase tracking-[5px] font-medium">FPT University ? Group 5 Project</p>
+            <div class="mt-10 pt-6 border-t border-indigo-500/20 light:border-indigo-500/40">
+                <p class="theme-text-sub text-[8px] uppercase tracking-[5px] font-black">FPT University / Group 5 Project</p>
             </div>
         </div>
     </div>
