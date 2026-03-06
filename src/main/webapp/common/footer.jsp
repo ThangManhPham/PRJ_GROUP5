@@ -1,92 +1,129 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <style>
-    /* CSS đồng bộ cho các chế độ Mode */
-    .glass-nav { 
+    /* Online Badge Component (Đồng bộ với Header) */
+    .online-badge {
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 9999px;
+        padding: 6px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
         transition: all 0.3s ease;
     }
-    
-    .light-mode .glass-nav { 
-        background: rgba(255, 255, 255, 0.8); 
-        border-bottom: 1px solid #e2e8f0; 
-    }
-    
-    .nav-link { 
-        color: #94a3b8; 
-        font-weight: 600; 
-        transition: color 0.2s; 
-    }
-    
-    .light-mode .nav-link { 
-        color: #64748b; 
-    }
-    
-    .nav-link:hover, .light-mode .nav-link:hover { 
-        color: #6366f1; 
-    }
-    
-    .active-link { 
-        color: #818cf8 !important; 
+    .light-mode .online-badge {
+        background: rgba(241, 245, 249, 0.8);
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
-    /* CSS bổ sung cho Footer để đồng bộ với Light Mode */
-    .light-mode footer {
-        background-color: rgba(241, 245, 249, 0.8);
-        border-color: rgba(0, 0, 0, 0.05);
+    /* Hiệu ứng đèn LED */
+    .dot-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    
-    .light-mode .footer-text-main { color: #1e293b; }
-    .light-mode .footer-text-sub { color: #64748b; }
+    .dot-main {
+        width: 10px;
+        height: 10px;
+        background-color: #10b981;
+        border-radius: 50%;
+        z-index: 2;
+    }
+    .dot-pulse {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #10b981;
+        border-radius: 50%;
+        animation: pulse-animation 2s infinite;
+        z-index: 1;
+    }
+    @keyframes pulse-animation {
+        0% { transform: scale(1); opacity: 0.8; }
+        100% { transform: scale(3.5); opacity: 0; }
+    }
+
+    /* Typography cho Status */
+    .status-text-top {
+        font-size: 10px;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 1;
+    }
+    .status-text-main {
+        font-size: 14px;
+        font-weight: 800;
+        color: #10b981;
+        text-transform: uppercase;
+        line-height: 1.2;
+    }
+
+    /* Footer Styles */
+    footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(8px);
+        transition: all 0.3s ease;
+    }
+    .light-mode footer {
+        background: rgba(241, 245, 249, 0.8);
+        border-top: 1px solid #e2e8f0;
+    }
+    .footer-text-title { 
+        color: #f1f5f9; 
+        transition: color 0.3s; 
+    }
+    .light-mode .footer-text-title { 
+        color: #1e293b; 
+    }
 </style>
 
-</main> 
-
-<!-- Footer với các class hỗ trợ chuyển đổi mode -->
-<footer class="mt-16 pb-8 border-t border-white/[0.05] bg-[#0f172a]/40 backdrop-blur-sm transition-colors duration-300">
-    <div class="max-w-7xl mx-auto px-8 pt-10">
-        
-        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+<footer class="mt-16 pb-12">
+    <div class="max-w-7xl mx-auto px-8 pt-12">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-8">
             
-            <!-- Logo & Copyright Section -->
-            <div class="flex items-center space-x-3 group opacity-80 hover:opacity-100 transition-opacity">
-                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-xs font-bold text-white shadow-lg italic">
+            <!-- Phần Logo & Bản quyền -->
+            <div class="flex items-center space-x-4 group">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-lg font-black text-white shadow-lg italic">
                     G
                 </div>
                 <div>
-                    <h4 class="footer-text-main text-[10px] font-black tracking-[0.15em] text-gray-200 uppercase leading-none">GPA System</h4>
-                    <p class="footer-text-sub text-[8px] text-gray-500 font-medium mt-1">© 2026 Made for Group 5.</p>
+                    <h4 class="footer-text-title text-lg font-black tracking-tighter uppercase leading-none">GPA System</h4>
+                    <p class="text-sm text-gray-500 font-medium mt-1">© 2026 Made for Group 5.</p>
                 </div>
             </div>
 
-            <!-- Navigation Links -->
-            <nav class="flex items-center gap-x-6 text-[9px] uppercase tracking-[0.15em] font-bold">
-                <a href="#" class="nav-link">Privacy Policy</a>
-                <a href="#" class="nav-link">Documentation</a>
-                <a href="#" class="nav-link">Support</a>
+            <!-- Điều hướng Links -->
+            <nav class="flex items-center gap-x-8 text-xs uppercase tracking-widest font-bold">
+                <a href="#" class="nav-link text-slate-400 hover:text-indigo-500 transition-colors">Privacy Policy</a>
+                <a href="#" class="nav-link text-slate-400 hover:text-indigo-500 transition-colors">Documentation</a>
+                <a href="#" class="nav-link text-slate-400 hover:text-indigo-500 transition-colors">Support</a>
             </nav>
 
-            <!-- Status Indicator -->
-            <div class="flex items-center gap-2.5 pl-4 pr-3 py-2 rounded-xl bg-black/20 border border-white/5 shadow-inner light-mode:bg-white/50">
-                <div class="text-right">
-                    <p class="text-[6px] text-gray-500 uppercase font-black leading-none mb-0.5">Hệ thống</p>
-                    <p class="text-[10px] font-black text-emerald-500 uppercase leading-none">Trực tuyến</p>
+            <!-- Chỉ số Trực tuyến (Đồng bộ với Header) -->
+            <div class="online-badge">
+                <div class="flex flex-col items-end">
+                    <span class="status-text-top">Hệ thống</span>
+                    <span class="status-text-main">Trực tuyến</span>
                 </div>
-                <div class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-40"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]"></span>
+                <div class="dot-container">
+                    <div class="dot-main"></div>
+                    <div class="dot-pulse"></div>
                 </div>
             </div>
         </div>
         
-        <!-- Bottom Credits -->
-        <div class="mt-10 flex flex-col items-center">
-            <div class="w-16 h-[1px] bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
-            <p class="mt-3 text-[8px] font-bold text-indigo-400/60 tracking-[0.4em] uppercase">
+        <!-- Dòng Credit cuối trang -->
+        <div class="mt-12 flex flex-col items-center">
+            <div class="w-24 h-[1px] bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent"></div>
+            <p class="mt-4 text-[10px] font-black text-indigo-400/60 tracking-[0.5em] uppercase">
                 Built with Java Maven
             </p>
         </div>
     </div>
 </footer>
-
-</body>
-</html>
