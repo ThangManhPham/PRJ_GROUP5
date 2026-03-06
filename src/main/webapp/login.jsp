@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,43 +35,42 @@
             flex-direction: column;
             transition: background 0.5s ease;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         body.light { background: var(--bg-gradient-light); }
         body.dark { background: var(--bg-gradient-dark); }
 
+        #tag-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .floating-tag {
             position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 6px 14px;
             color: var(--text-main);
             font-weight: 500;
             font-size: 0.75rem;
-            z-index: 0;
-            opacity: 0;
-            animation: floatUpRight 14s infinite linear;
-            padding: 5px 10px;
             white-space: nowrap;
-            pointer-events: none;
+            user-select: none;
+            transition: background 0.3s, border 0.3s, color 0.3s;
+            will-change: transform;
         }
 
         .light .floating-tag {
-            background: rgba(255, 255, 255, 0.4);
-            border-color: rgba(99, 102, 241, 0.15);
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(99, 102, 241, 0.2);
             color: var(--primary-indigo);
-        }
-
-        @keyframes floatUpRight {
-            0% { transform: translate(-100px, 150px) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.5; }
-            90% { opacity: 0.5; }
-            100% { transform: translate(400px, -500px) rotate(25deg); opacity: 0; }
         }
 
         .glass-card {
@@ -177,53 +177,27 @@
             transition: background 0.3s ease, color 0.3s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* Hi?u ?ng xoay n�t khi sang Light mode */
-        body.light .theme-toggle {
-            transform: rotate(180deg);
-        }
+        body.light .theme-toggle { transform: rotate(180deg); }
+        #themeIcon { transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        body.light #themeIcon { transform: rotate(-180deg); }
 
-        /* Xoay icon ng??c l?i ?? icon kh�ng b? l?n ??u */
-        #themeIcon {
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        body.light #themeIcon {
-            transform: rotate(-180deg);
-        }
-
-        .content-wrapper {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 1;
-        }
+      .content-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 1;
+}
     </style>
 </head>
 <body class="dark">
 
-    <div id="dynamic-tags">
-        <!-- (D? li?u th? tr�i n?i gi? nguy�n t? code c?a b?n) -->
-        <div class="floating-tag" style="bottom: 5%; left: 5%; animation-delay: 0s;">Nhan</div>
-        <div class="floating-tag" style="bottom: 15%; left: 10%; animation-delay: -2s;">Quay</div>
-        <div class="floating-tag" style="bottom: 10%; left: 20%; animation-delay: -4s;">Phuoc</div>
-        <div class="floating-tag" style="bottom: 25%; left: 30%; animation-delay: -6s;">Thang</div>
-        <div class="floating-tag" style="bottom: 5%; left: 45%; animation-delay: -8s;">Tai</div>
-        <div class="floating-tag font-bold text-orange-400" style="bottom: 20%; left: 50%; animation-delay: -1s;">PRF192</div>
-        <div class="floating-tag font-bold text-blue-400" style="bottom: 35%; left: 15%; animation-delay: -3s;">MAE101</div>
-        <div class="floating-tag font-bold text-green-400" style="bottom: 45%; left: 40%; animation-delay: -5.5s;">CEA201</div>
-        <div class="floating-tag font-bold text-pink-400" style="bottom: 30%; left: 60%; animation-delay: -7s;">PRO192</div>
-        <div class="floating-tag font-bold text-yellow-400" style="bottom: 15%; left: 75%; animation-delay: -9s;">OSG202</div>
-        <div class="floating-tag font-bold text-purple-400" style="bottom: 55%; left: 25%; animation-delay: -11s;">SSG104</div>
-        <div class="floating-tag font-bold text-cyan-400" style="bottom: 65%; left: 55%; animation-delay: -13s;">CSD201</div>
-        <div class="floating-tag font-bold text-red-400" style="bottom: 40%; left: 80%; animation-delay: -2.5s;">DBI202</div>
-        <div class="floating-tag font-bold text-indigo-400" style="bottom: 80%; left: 35%; animation-delay: -4.5s;">SWE201</div>
-        <div class="floating-tag font-bold text-orange-500 border-orange-500/30" style="bottom: 50%; left: 10%; animation-delay: -10s; font-size: 1rem;">FPTU</div>
-    </div>
+    <div id="tag-container"></div>
 
-    <!-- Theme Switcher v?i logic: N?n t?i hi?n M?t Tr?ng -->
-    <button onclick="toggleTheme()" class="theme-toggle" title="Switch Theme">
+    <button onclick="toggleTheme()" class="theme-toggle" title="Thay ??i giao di?n">
         <svg id="themeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path id="iconPath" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
@@ -235,18 +209,18 @@
                 <div class="inline-block p-4 rounded-full bg-indigo-500/10 mb-4 border border-indigo-500/20">
                     <i class="fas fa-university text-3xl text-indigo-400"></i>
                 </div>
-                <h1 class="text-3xl font-bold mb-2 tracking-tight theme-text-main">Login System</h1>
-                <p class="theme-text-sub font-light italic">Welcome back, Group 5 Member</p>
+                <h1 class="text-3xl font-bold mb-2 tracking-tight theme-text-main">Trang Đăng Nhập</h1>
+                <p class="theme-text-sub font-light italic text-sm">Chào mừng đến với thành viên Nhóm 5</p>
             </div>
 
-            <form action="${pageContext.request.contextPath}/login" method="post" class="space-y-5">
+            <form action="#" method="post" class="space-y-5">
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-[0.2em] ml-1 theme-text-sub">FE Account</label>
+                    <label class="text-[10px] font-black uppercase tracking-[0.2em] ml-1 theme-text-sub">Tài khoản FE (Email)</label>
                     <input type="text" name="username" placeholder="nhannvhe123" class="input-box" required>
                 </div>
 
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-[0.2em] ml-1 theme-text-sub">System Password</label>
+                    <label class="text-[10px] font-black uppercase tracking-[0.2em] ml-1 theme-text-sub">Mật khẩu</label>
                     <div class="relative">
                         <input type="password" id="password" name="password" placeholder="********" class="input-box" required>
                         <span class="absolute right-4 top-1/2 -translate-y-1/2 theme-text-sub hover:text-indigo-500 cursor-pointer" onclick="togglePassword()">
@@ -258,21 +232,19 @@
                 <div class="flex items-center justify-between text-xs px-1">
                     <label class="flex items-center space-x-2 cursor-pointer group">
                         <input type="checkbox" name="remember" class="w-4 h-4 rounded border-indigo-300 bg-transparent text-indigo-600 focus:ring-0">
-                        <span class="theme-text-sub group-hover:theme-text-main transition-colors">Keep me logged in</span>
+                        <span class="theme-text-sub group-hover:theme-text-main transition-colors">Ghi nhớ đăng nhập</span>
                     </label>
-                    <a href="#" class="theme-text-sub hover:text-indigo-500 transition-colors font-bold">Forgot?</a>
+                    <a href="#" class="theme-text-sub hover:text-indigo-500 transition-colors font-bold">Quên mật khẩu</a>
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" class="btn-base login-btn">Login Now</button>
-                    <a href="${pageContext.request.contextPath}/register" class="btn-base register-btn">
-                        Create Account
-                    </a>
+                    <button type="submit" class="btn-base login-btn">đăng nhập ngay</button>
+                    <a href="${pageContext.request.contextPath}/register" class="btn-base register-btn">Tạo tài khoảng</a>
                 </div>
             </form>
             
             <div class="mt-8 pt-6 border-t border-indigo-500/10 text-center">
-                <p class="theme-text-sub text-[8px] uppercase tracking-[5px] font-medium">FPT University ? Group 5 Project</p>
+                <p class="theme-text-sub text-[8px] uppercase tracking-[5px] font-medium">FPT University | Group 5 Project</p>
             </div>
         </div>
     </div>
@@ -281,16 +253,11 @@
         function toggleTheme() {
             const body = document.body;
             const path = document.getElementById('iconPath');
-            
             if (body.classList.contains('light')) {
-                // Sang Dark Mode
                 body.classList.replace('light', 'dark');
-                // N?n t?i: Hi?n icon M?t Tr?ng
                 path.setAttribute('d', 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z');
             } else {
-                // Sang Light Mode
                 body.classList.replace('dark', 'light');
-                // N?n s�ng: Hi?n icon M?t Tr?i
                 path.setAttribute('d', 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z');
             }
         }
@@ -306,6 +273,108 @@
                 eyeIcon.classList.replace("fa-eye-slash", "fa-eye");
             }
         }
+
+        // --- H? TH?NG TAG V?I MÔN H?C SE FPTU ---
+        const seSubjects = [
+            "PRJ301", "SWP391", "SWR302", "SWT301", "PRN211", 
+            "PRN221", "PRN231", "ITE302c", "MLN131", "EXE101",
+            "EXE201", "SYB301", "PFP191", "JSW301", "IOT102",
+            "NWC203", "SDW301", "WDP301", "PRM392", "WAD201"
+        ];
+
+        const otherTags = ["Nhan", "Quay", "Phuoc", "Thang", "Tai", "FPTU", "Group 5", "SE", "Software Engineering"];
+        
+        const allTagNames = seSubjects.concat(otherTags);
+        const container = document.getElementById('tag-container');
+        const tags = [];
+        const mouse = { x: -1000, y: -1000 };
+        const repulsionRadius = 160; 
+        const repulsionStrength = 0.6; 
+
+        window.addEventListener('mousemove', function(e) {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        function Tag(name) {
+            this.element = document.createElement('div');
+            this.element.className = 'floating-tag';
+            this.element.innerText = name;
+            
+            if (seSubjects.indexOf(name) !== -1) {
+                const colors = ['text-blue-400', 'text-green-400', 'text-pink-400', 'text-yellow-400', 'text-cyan-400'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                this.element.classList.add(randomColor, 'font-semibold');
+            }
+
+            container.appendChild(this.element);
+
+            this.x = Math.random() * window.innerWidth;
+            this.y = Math.random() * window.innerHeight;
+            this.vx = (Math.random() - 0.5) * 1.8;
+            this.vy = (Math.random() - 0.5) * 1.8;
+            this.ax = 0;
+            this.ay = 0;
+        }
+
+        Tag.prototype.update = function() {
+            const dx = this.x - mouse.x;
+            const dy = this.y - mouse.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < repulsionRadius) {
+                const force = (repulsionRadius - distance) / repulsionRadius;
+                this.ax += (dx / distance) * force * repulsionStrength;
+                this.ay += (dy / distance) * force * repulsionStrength;
+            }
+
+            this.vx += this.ax;
+            this.vy += this.ay;
+            this.vx *= 0.96; 
+            this.vy *= 0.96;
+            
+            this.ax = 0;
+            this.ay = 0;
+
+            const minSpeed = 0.3;
+            this.x += this.vx + (Math.sign(this.vx || 1) * minSpeed);
+            this.y += this.vy + (Math.sign(this.vy || 1) * minSpeed);
+
+            const margin = 80;
+            if (this.x < -margin) this.x = window.innerWidth + margin;
+            if (this.x > window.innerWidth + margin) this.x = -margin;
+            if (this.y < -margin) this.y = window.innerHeight + margin;
+            if (this.y > window.innerHeight + margin) this.y = -margin;
+
+            // S?a l?i JSP EL b?ng cách dùng n?i chu?i thay vì Template Literals
+            this.element.style.transform = 'translate(' + this.x + 'px, ' + this.y + 'px)';
+        };
+
+        function initTags() {
+            for (let i = 0; i < 50; i++) {
+                const name = allTagNames[i % allTagNames.length];
+                tags.push(new Tag(name));
+            }
+        }
+
+        function animate() {
+            for (let i = 0; i < tags.length; i++) {
+                tags[i].update();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = function() {
+            initTags();
+            animate();
+        };
+
+        window.addEventListener('resize', function() {
+            for (let i = 0; i < tags.length; i++) {
+                if (tags[i].x > window.innerWidth) tags[i].x = Math.random() * window.innerWidth;
+                if (tags[i].y > window.innerHeight) tags[i].y = Math.random() * window.innerHeight;
+            }
+        });
     </script>
 </body>
 </html>
