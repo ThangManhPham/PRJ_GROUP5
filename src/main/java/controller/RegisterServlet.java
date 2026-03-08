@@ -44,7 +44,7 @@ public class RegisterServlet extends HttpServlet {
         UserAccount newUser = new UserAccount();
         newUser.setUsername(username);
         newUser.setPassword(password);
-        newUser.setRole(2); // default role
+        newUser.setRole(3); // default role
 
         userDAO.insert(newUser);
 
