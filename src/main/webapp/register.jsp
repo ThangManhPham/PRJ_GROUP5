@@ -35,7 +35,8 @@
             flex-direction: column;
             transition: background 0.5s ease;
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         body.light { background: var(--bg-gradient-light); }
@@ -175,16 +176,127 @@
         #themeIcon { transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
         body.light #themeIcon { transform: rotate(-180deg); }
 
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .divider-text {
+            padding: 0 12px;
+            color: var(--text-sub);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .light .google-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .google-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #10b981;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
+        }
+
        .content-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     width: 100%;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
     z-index: 1;
+    padding: 20px;
+    box-sizing: border-box;
 }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.5);
+        }
+
+        .light ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .light ::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.4);
+        }
+
+        .light ::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .glass-card {
+                margin: 20px;
+                padding: 30px;
+                max-width: none;
+                width: calc(100% - 40px);
+            }
+
+            .content-wrapper {
+                padding: 10px;
+                min-height: auto;
+                padding-top: 60px;
+                padding-bottom: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 25px;
+                margin: 10px;
+                width: calc(100% - 20px);
+            }
+
+            .content-wrapper {
+                padding: 5px;
+            }
+        }
     </style>
 </head>
 <body class="dark">
@@ -239,6 +351,20 @@
                     <button type="submit" class="btn-base primary-btn">Đăng ký ngay</button>
                     <a href="${pageContext.request.contextPath}/login" class="btn-base secondary-btn">Đã có tài khoản? Đăng nhập</a>
                 </div>
+
+                <div class="divider">
+                    <span class="divider-text">HOẶC</span>
+                </div>
+
+                <button type="button" class="google-btn" onclick="handleGoogleSignUp()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    ĐĂNG KÝ VỚI GOOGLE
+                </button>
             </form>
             
             <div class="mt-6 pt-4 border-t border-emerald-500/10 text-center">
@@ -247,7 +373,40 @@
         </div>
     </div>
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
+        function handleGoogleSignUp() {
+            google.accounts.id.initialize({
+                client_id: '991279627816-vehv4inre0nn7i6nh1gohi5nb3s8ee4t.apps.googleusercontent.com',
+                callback: handleGoogleSignUpResponse
+            });
+            google.accounts.id.renderButton(
+                document.querySelector('.google-btn'),
+                { theme: 'outline', size: 'large', text: 'signup_with' }
+            );
+            google.accounts.id.prompt();
+        }
+
+        function handleGoogleSignUpResponse(response) {
+            // Gửi token tới backend
+            fetch('${pageContext.request.contextPath}/auth/google-register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'idToken=' + response.credential
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '${pageContext.request.contextPath}/student';
+                } else {
+                    alert('Có lỗi khi đăng ký với Google: ' + (data.message || 'Vui lòng thử lại'));
+                }
+            })
+            .catch(error => console.error('Lỗi:', error));
+        }
+
         function toggleTheme() {
             const body = document.body;
             const path = document.getElementById('iconPath');

@@ -118,6 +118,39 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+        /* Select field – tối ưu cho dark / light */
+        .select-field {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding-right: 2.5rem; /* chừa chỗ cho icon mũi tên */
+            transition: all 0.3s ease;
+        }
+
+        .select-field:focus {
+            border-color: var(--primary-indigo);
+            outline: none;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .light-mode .select-field {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(99, 102, 241, 0.2);
+            color: #1e1b4b;
+        }
+
+        /* Màu của options trong dropdown (tương phản theo theme) */
+        .select-field option {
+            background-color: #020617; /* slate-950 */
+            color: #e5e7eb;           /* slate-200 */
+        }
+
+        .light-mode .select-field option {
+            background-color: #ffffff;
+            color: #0f172a;           /* slate-900 */
+        }
+
         .btn-primary { 
             background: linear-gradient(135deg, #6366f1, #4f46e5); 
             color: white;
@@ -193,6 +226,15 @@
                 <!-- Form Column -->
                 <div class="lg:col-span-4">
                     <div class="glass-card p-8">
+                        <c:if test="${not empty errors}">
+                            <div class="mb-4 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/40 text-xs text-red-200 flex items-start gap-2">
+                                <i class="fas fa-exclamation-triangle mt-0.5"></i>
+                                <div>
+                                    <p class="font-semibold">Thông tin chưa hợp lệ. Vui lòng kiểm tra lại các trường bên dưới.</p>
+                                </div>
+                            </div>
+                        </c:if>
+
                         <div class="flex items-center gap-4 mb-8">
                             <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
                                 <i class="fas ${isUpdate ? 'fa-edit' : 'fa-plus-circle'} text-indigo-400 text-xl"></i>
@@ -209,26 +251,46 @@
                             <div>
                                 <label class="block text-[10px] font-black uppercase tracking-wider mb-2 ml-1 theme-text-sub">Mã Số Sinh Viên</label>
                                 <input type="text" name="studentId" value="${student != null ? student.studentId : ''}" 
-                                       class="input-field w-full px-4 py-3.5 rounded-xl ${isUpdate ? 'opacity-50 cursor-not-allowed' : ''}"
-                                       ${isUpdate ? 'readonly' : ''} placeholder="VD: SE180000">
+                                       class="input-field w-full px-4 py-3.5 rounded-xl ${isUpdate ? 'opacity-50 cursor-not-allowed' : ''} ${errors.studentId != null ? 'border-red-500 ring-1 ring-red-500/60' : ''}"
+                                       ${isUpdate ? 'readonly' : ''}
+                                       required maxlength="50" pattern="[A-Za-z0-9]+"
+                                       title="Mã số sinh viên chỉ được chứa chữ và số, tối đa 50 ký tự."
+                                       placeholder="VD: SE180000">
+                                <c:if test="${errors.studentId != null}">
+                                    <p class="mt-1 text-xs text-red-400">${errors.studentId}</p>
+                                </c:if>
                             </div>
 
                             <div>
                                 <label class="block text-[10px] font-black uppercase tracking-wider mb-2 ml-1 theme-text-sub">Họ Và Tên</label>
                                 <input type="text" name="name" value="${student != null ? student.name : ''}" 
-                                       class="input-field w-full px-4 py-3.5 rounded-xl" placeholder="Nhập tên đầy đủ">
+                                       class="input-field w-full px-4 py-3.5 rounded-xl ${errors.name != null ? 'border-red-500 ring-1 ring-red-500/60' : ''}"
+                                       required minlength="5" maxlength="50"
+                                       pattern="[A-Za-zÀ-ỹ\s]+"
+                                       title="Họ và tên phải từ 5 đến 50 ký tự và chỉ chứa chữ cái, khoảng trắng (không có số hoặc ký tự đặc biệt)."
+                                       placeholder="Nhập tên đầy đủ">
+                                <c:if test="${errors.name != null}">
+                                    <p class="mt-1 text-xs text-red-400">${errors.name}</p>
+                                </c:if>
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-[10px] font-black uppercase tracking-wider mb-2 ml-1 theme-text-sub">Điểm GPA</label>
                                     <input type="number" step="0.1" min="0" max="10" name="gpa" value="${student != null ? student.gpa : ''}" 
-                                           class="input-field w-full px-4 py-3.5 rounded-xl">
+                                           class="input-field w-full px-4 py-3.5 rounded-xl ${errors.gpa != null ? 'border-red-500 ring-1 ring-red-500/60' : ''}"
+                                           required
+                                           title="GPA phải là số trong khoảng từ 0 đến 10.">
+                                    <c:if test="${errors.gpa != null}">
+                                        <p class="mt-1 text-xs text-red-400">${errors.gpa}</p>
+                                    </c:if>
                                 </div>
                                 <div>
                                     <label class="block text-[10px] font-black uppercase tracking-wider mb-2 ml-1 theme-text-sub">Khoa / Ngành</label>
                                     <div class="relative">
-                                        <select name="departmentId" class="input-field w-full px-4 py-3.5 rounded-xl appearance-none cursor-pointer">
+                                        <select name="departmentId" class="select-field w-full px-4 py-3.5 rounded-xl appearance-none cursor-pointer ${errors.departmentId != null ? 'border-red-500 ring-1 ring-red-500/60' : ''}"
+                                                required
+                                                title="Vui lòng chọn một khoa/ngành hợp lệ.">
                                             <c:forEach items="${departments}" var="d">
                                                 <option value="${d.id}" ${student != null && student.department.id == d.id ? 'selected' : ''}>
                                                     ${d.departmentname}
@@ -239,6 +301,9 @@
                                             <i class="fas fa-chevron-down text-xs"></i>
                                         </div>
                                     </div>
+                                    <c:if test="${errors.departmentId != null}">
+                                        <p class="mt-1 text-xs text-red-400">${errors.departmentId}</p>
+                                    </c:if>
                                 </div>
                             </div>
 
@@ -338,6 +403,109 @@
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
             localStorage.setItem('theme', newTheme);
             applyTheme(newTheme);
+        });
+
+        // --- LIVE VALIDATION FORM STUDENT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form[action="student"]');
+            if (!form) return;
+
+            const studentIdInput = form.querySelector('input[name="studentId"]');
+            const nameInput = form.querySelector('input[name="name"]');
+            const gpaInput = form.querySelector('input[name="gpa"]');
+            const deptSelect = form.querySelector('select[name="departmentId"]');
+
+            const validateStudentId = () => {
+                if (!studentIdInput || studentIdInput.readOnly) return true;
+                const v = (studentIdInput.value || '').trim();
+                studentIdInput.setCustomValidity('');
+                if (!v) {
+                    studentIdInput.setCustomValidity('Mã số sinh viên không được để trống.');
+                } else if (v.length > 50) {
+                    studentIdInput.setCustomValidity('Mã số sinh viên không được vượt quá 50 ký tự.');
+                } else if (!/^[A-Za-z0-9]+$/.test(v)) {
+                    studentIdInput.setCustomValidity('Mã số sinh viên chỉ được chứa chữ và số, không có ký tự đặc biệt.');
+                }
+                studentIdInput.reportValidity();
+                return studentIdInput.checkValidity();
+            };
+
+            const validateName = () => {
+                if (!nameInput) return true;
+                const v = (nameInput.value || '').trim();
+                nameInput.setCustomValidity('');
+                const nameRegex = /^[A-Za-zÀ-ỹ\s]+$/;
+                if (!v) {
+                    nameInput.setCustomValidity('Họ và tên không được để trống.');
+                } else if (v.length < 5 || v.length > 50) {
+                    nameInput.setCustomValidity('Họ và tên phải từ 5 đến 50 ký tự.');
+                } else if (!nameRegex.test(v)) {
+                    nameInput.setCustomValidity('Họ và tên chỉ được chứa chữ cái và khoảng trắng, không có số hoặc ký tự đặc biệt.');
+                }
+                nameInput.reportValidity();
+                return nameInput.checkValidity();
+            };
+
+            const validateGpa = () => {
+                if (!gpaInput) return true;
+                const v = (gpaInput.value || '').trim();
+                gpaInput.setCustomValidity('');
+                if (!v) {
+                    gpaInput.setCustomValidity('GPA không được để trống.');
+                } else {
+                    const num = Number(v);
+                    if (Number.isNaN(num)) {
+                        gpaInput.setCustomValidity('GPA phải là số hợp lệ.');
+                    } else if (num < 0 || num > 10) {
+                        gpaInput.setCustomValidity('GPA phải nằm trong khoảng từ 0 đến 10.');
+                    }
+                }
+                gpaInput.reportValidity();
+                return gpaInput.checkValidity();
+            };
+
+            const validateDept = () => {
+                if (!deptSelect) return true;
+                const v = (deptSelect.value || '').trim();
+                deptSelect.setCustomValidity('');
+                if (!v) {
+                    deptSelect.setCustomValidity('Vui lòng chọn một khoa/ngành.');
+                }
+                deptSelect.reportValidity();
+                return deptSelect.checkValidity();
+            };
+
+            if (studentIdInput) {
+                studentIdInput.addEventListener('blur', validateStudentId);
+                studentIdInput.addEventListener('input', () => {
+                    if (studentIdInput.value.trim().length > 0) validateStudentId();
+                });
+            }
+            if (nameInput) {
+                nameInput.addEventListener('blur', validateName);
+                nameInput.addEventListener('input', () => {
+                    if (nameInput.value.trim().length > 0) validateName();
+                });
+            }
+            if (gpaInput) {
+                gpaInput.addEventListener('blur', validateGpa);
+                gpaInput.addEventListener('input', () => {
+                    if (gpaInput.value.trim().length > 0) validateGpa();
+                });
+            }
+            if (deptSelect) {
+                deptSelect.addEventListener('change', validateDept);
+            }
+
+            form.addEventListener('submit', (e) => {
+                const okId = validateStudentId();
+                const okName = validateName();
+                const okGpa = validateGpa();
+                const okDept = validateDept();
+                if (!okId || !okName || !okGpa || !okDept) {
+                    e.preventDefault();
+                }
+            });
         });
 
         // --- HỆ THỐNG TAG NỀN (Né chuột) ---

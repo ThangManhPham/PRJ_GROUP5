@@ -39,7 +39,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     if (user != null) {
 
         if (user.getRole() == 3) {
-            request.setAttribute("error", "You have no permission to access this function!");
+            request.setAttribute("warning", "Đăng nhập thành công, nhưng bạn không có quyền để truy cập chỉnh sửa trang web này!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
         }
@@ -70,7 +70,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         response.sendRedirect("student");
 
     } else {
-        request.setAttribute("error", "Username or password is invalid!");
+        request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 }

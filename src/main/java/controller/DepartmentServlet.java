@@ -49,22 +49,31 @@ public class DepartmentServlet extends HttpServlet {
 }
     }
     private String validateDepartmentName(String name) {
-    if (name == null) {
-        return "Department Name không được để trống!";
+        if (name == null) {
+            return "Tên khoa không được để trống!";
+        }
+
+        String trimmed = name.trim();
+
+        if (trimmed.isEmpty()) {
+            return "Tên khoa không được để trống hoặc toàn khoảng trắng!";
+        }
+
+        if (trimmed.length() < 2) {
+            return "Tên khoa phải có tối thiểu 2 ký tự!";
+        }
+
+        if (trimmed.length() > 50) {
+            return "Tên khoa không được vượt quá 50 ký tự!";
+        }
+
+        // Chỉ cho phép chữ cái (kể cả tiếng Việt) và khoảng trắng
+        if (!trimmed.matches("^[\\p{L} ]+$")) {
+            return "Tên khoa chỉ được chứa chữ cái và khoảng trắng, không có số hoặc ký tự đặc biệt!";
+        }
+
+        return null; // hợp lệ
     }
-
-    String trimmed = name.trim();
-
-    if (trimmed.isEmpty()) {
-        return "Department Name không được để trống hoặc toàn khoảng trắng!";
-    }
-
-    if (trimmed.length() < 2) {
-        return "Department Name phải có tối thiểu 2 ký tự!";
-    }
-
-    return null; // hợp lệ
-}
     private void listDepartments(HttpServletRequest request,
                                  HttpServletResponse response)
             throws ServletException, IOException {
