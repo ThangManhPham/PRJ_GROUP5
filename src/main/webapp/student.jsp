@@ -134,8 +134,8 @@
         /* Theme Toggle */
         .theme-toggle {
             position: fixed;
-            top: 180px;
-            right: 125px;
+            top: 20px;
+            right: 20px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             width: 48px;
@@ -149,16 +149,13 @@
             color: var(--text-main);
             backdrop-filter: blur(10px);
             transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         body.light-mode .theme-toggle { transform: rotate(180deg); }
-
         .theme-text-sub { color: var(--text-sub); transition: color 0.5s ease; }
 
-        /* Custom Scrollbar */
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 10px; }
     </style>
 </head>
@@ -175,7 +172,7 @@
     </button>
 
     <div class="relative z-10 max-w-7xl mx-auto px-6 py-10">
-        <!-- Header Section (Removed Logo and Group ID) -->
+        <!-- Header Section -->
         <div class="mb-10">
             <div class="flex flex-col md:flex-row justify-between items-end gap-6">
                 <div>
@@ -183,7 +180,7 @@
                     <p class="theme-text-sub text-sm mt-1">
                         Xin chào, <span class="font-bold text-indigo-500">${user.username}</span> 
                         <span class="mx-2 opacity-30">•</span>
-                        <span class="px-2 py-0.5 rounded-md bg-indigo-500/10 text-[10px] font-bold uppercase tracking-widest">
+                        <span class="px-2 py-0.5 rounded-md bg-indigo-500/10 text-[10px] font-bold uppercase tracking-widest text-indigo-400 border border-indigo-500/20">
                             ${user.role == 1 ? 'Manager' : 'Staff'}
                         </span>
                     </p>
@@ -193,7 +190,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
             <c:if test="${user.role == 2}">
-                <!-- Form: Thêm/Sửa -->
+                <!-- Form Column -->
                 <div class="lg:col-span-4">
                     <div class="glass-card p-8">
                         <div class="flex items-center gap-4 mb-8">
@@ -205,35 +202,37 @@
                             </h3>
                         </div>
 
-                        <form action="student" method="post" class="space-y-6">
-                            <input type="hidden" name="id" value="${student.id}" />
-                            
+                        <form action="student" method="post" class="space-y-5">
+                            <input type="hidden" name="action" value="${isUpdate ? 'update' : 'insert'}">
+                            <input type="hidden" name="id" value="${student != null ? student.id : ''}">
+
                             <div>
                                 <label class="block text-[10px] font-black uppercase tracking-wider mb-2 ml-1 theme-text-sub">Mã Số Sinh Viên</label>
-                                <input type="text" name="studentId" value="${student.studentId}" 
-                                       class="input-field w-full px-4 py-3.5 rounded-xl ${errors.studentId != null ? 'border-red-500' : ''} ${isUpdate ? 'opacity-50 cursor-not-allowed' : ''}" 
+                                <input type="text" name="studentId" value="${student != null ? student.studentId : ''}" 
+                                       class="input-field w-full px-4 py-3.5 rounded-xl ${isUpdate ? 'opacity-50 cursor-not-allowed' : ''}"
                                        ${isUpdate ? 'readonly' : ''} placeholder="VD: SE180000">
                             </div>
 
                             <div>
                                 <label class="block text-[10px] font-black uppercase tracking-wider mb-2 ml-1 theme-text-sub">Họ Và Tên</label>
-                                <input type="text" name="name" value="${student.name}" 
-                                       class="input-field w-full px-4 py-3.5 rounded-xl ${errors.name != null ? 'border-red-500' : ''}"
-                                       placeholder="Nhập tên đầy đủ">
+                                <input type="text" name="name" value="${student != null ? student.name : ''}" 
+                                       class="input-field w-full px-4 py-3.5 rounded-xl" placeholder="Nhập tên đầy đủ">
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-[10px] font-black uppercase tracking-wider mb-2 ml-1 theme-text-sub">Điểm GPA</label>
-                                    <input type="number" step="0.1" min="0" max="10" name="gpa" value="${student.gpa}" 
+                                    <input type="number" step="0.1" min="0" max="10" name="gpa" value="${student != null ? student.gpa : ''}" 
                                            class="input-field w-full px-4 py-3.5 rounded-xl">
                                 </div>
                                 <div>
                                     <label class="block text-[10px] font-black uppercase tracking-wider mb-2 ml-1 theme-text-sub">Khoa / Ngành</label>
                                     <div class="relative">
                                         <select name="departmentId" class="input-field w-full px-4 py-3.5 rounded-xl appearance-none cursor-pointer">
-                                            <c:forEach var="d" items="${departments}">
-                                                <option value="${d.id}" ${student.department.id == d.id ? 'selected' : ''}>${d.departmentname}</option>
+                                            <c:forEach items="${departments}" var="d">
+                                                <option value="${d.id}" ${student != null && student.department.id == d.id ? 'selected' : ''}>
+                                                    ${d.departmentname}
+                                                </option>
                                             </c:forEach>
                                         </select>
                                         <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none opacity-50">
@@ -246,12 +245,18 @@
                             <button type="submit" class="btn-primary w-full py-4 rounded-xl font-bold text-white uppercase tracking-widest mt-4 active:scale-[0.98]">
                                 ${isUpdate ? 'Cập Nhật Ngay' : 'Thêm Vào Danh Sách'}
                             </button>
+                            
+                            <c:if test="${isUpdate}">
+                                <a href="student" class="block text-center text-xs font-bold theme-text-sub hover:text-indigo-400 transition-colors">
+                                    Hủy bỏ và quay lại
+                                </a>
+                            </c:if>
                         </form>
                     </div>
                 </div>
             </c:if>
 
-            <!-- Table: Danh sách -->
+            <!-- Table Column -->
             <div class="${user.role == 2 ? 'lg:col-span-8' : 'lg:col-span-12'}">
                 <div class="glass-card overflow-hidden">
                     <div class="p-6 border-b border-white/5 bg-white/5 flex justify-between items-center ${user.role == 1 ? 'bg-indigo-500/5' : ''}">

@@ -5,205 +5,148 @@
 <c:set var="isUpdate" value="${department != null}" />
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
-
+    /* 1. Biến số giao diện & Glassmorphism */
     :root {
-        --bg-gradient-light: linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 100%);
-        --bg-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-        --primary-indigo: #6366f1;
-        --text-main: #ffffff;
-        --text-sub: rgba(255, 255, 255, 0.6);
-        --card-bg: rgba(15, 23, 42, 0.6);
-        --border-color: rgba(99, 102, 241, 0.3);
-        --input-bg: rgba(255, 255, 255, 0.05);
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.12);
+        --accent-primary: #6366f1;
+        --accent-secondary: #a855f7;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
     }
 
-    body.light-mode {
-        --text-main: #1e1b4b;
-        --text-sub: rgba(30, 27, 75, 0.7);
-        --card-bg: rgba(255, 255, 255, 0.4);
-        --border-color: rgba(255, 255, 255, 0.8);
+    .light-mode {
+        --glass-bg: rgba(255, 255, 255, 0.7);
+        --glass-border: rgba(0, 0, 0, 0.08);
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        background-color: #f1f5f9;
     }
 
-    body {
-        font-family: 'Inter', sans-serif;
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        background: var(--bg-gradient-dark);
+    /* 2. Panels & Containers */
+    .glass-panel {
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        border-radius: 1.5rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         color: var(--text-main);
-        transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow-x: hidden;
     }
 
-    body.light-mode { background: var(--bg-gradient-light); }
-
-    /* Floating Tags Background Animation */
-    #tag-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 0;
+    .glass-panel:hover {
+        border-color: rgba(99, 102, 241, 0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     }
 
-    .floating-tag {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 12px;
-        padding: 6px 14px;
+    /* 3. Inputs & Forms */
+    .modern-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid rgba(255, 255, 255, 0.1);
         color: var(--text-main);
-        font-weight: 500;
-        font-size: 0.75rem;
-        white-space: nowrap;
-        user-select: none;
-        will-change: transform;
-    }
-
-    .light-mode .floating-tag {
-        background: rgba(255, 255, 255, 0.5);
-        border-color: rgba(99, 102, 241, 0.2);
-        color: var(--primary-indigo);
-    }
-
-    /* Glass Cards */
-    .glass-card { 
-        background: var(--card-bg); 
-        backdrop-filter: blur(40px); 
-        border: 2px solid var(--border-color); 
-        border-radius: 2rem; 
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .light-mode .glass-card { 
-        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
-    }
-
-    /* Inputs */
-    .input-field { 
-        background: var(--input-bg); 
-        border: 1px solid var(--border-color); 
-        color: var(--text-main); 
-        transition: all 0.3s ease; 
-    }
-
-    .light-mode .input-field {
-        background: rgba(255, 255, 255, 0.7);
-        border-color: rgba(99, 102, 241, 0.1);
-        color: #1e1b4b;
-    }
-
-    .input-field:focus { 
-        border-color: var(--primary-indigo); 
-        outline: none; 
-        box-shadow: 0 0 15px rgba(99, 102, 241, 0.25); 
-    }
-
-    /* Buttons */
-    .btn-primary { 
-        background: linear-gradient(135deg, #6366f1, #4f46e5); 
-        color: white;
-        box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
         transition: all 0.3s ease;
     }
 
-    .btn-primary:hover {
-        transform: translateY(-2px);
+    .light-mode .modern-input {
+        background: #ffffff;
+        border-color: #cbd5e1;
+    }
+
+    .modern-input:focus {
+        border-color: var(--accent-primary);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        outline: none;
+    }
+
+    /* 4. Table Styles */
+    .table-container {
+        border-radius: 1.5rem;
+        overflow: hidden;
+    }
+
+    .custom-table thead {
+        background: rgba(99, 102, 241, 0.08);
+    }
+
+    .table-row-animate {
+        transition: all 0.25s ease;
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .table-row-animate:hover {
+        background: rgba(99, 102, 241, 0.06) !important;
+        transform: scale(1.005);
+    }
+
+    /* 5. Animations */
+    @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-up {
+        animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* 6. Action Buttons */
+    .btn-gradient {
+        background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+        transition: all 0.3s ease;
+    }
+
+    .btn-gradient:hover {
         filter: brightness(1.1);
+        transform: scale(1.02);
+        box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
     }
 
-    /* Theme Toggle Sync with Student Style */
-    #theme-toggle {
-        width: 48px;
-        height: 48px;
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        backdrop-filter: blur(10px);
-        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    
-    #theme-toggle svg {
-        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    
-    #theme-toggle:hover {
-        transform: scale(1.1) rotate(5deg);
-        background: rgba(99, 102, 241, 0.15);
+    .action-icon-btn {
+        padding: 0.6rem;
+        border-radius: 0.75rem;
+        transition: all 0.2s;
     }
 
-    /* Icon Container Style for Section Titles */
-    .icon-box {
-        width: 48px;
-        height: 48px;
-        border-radius: 14px;
-        background: rgba(99, 102, 241, 0.15);
-        border: 1px solid rgba(99, 102, 241, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
-
-    .icon-badge {
-        position: absolute;
-        top: -4px;
-        right: -4px;
-        width: 18px;
-        height: 18px;
-        background: #6366f1;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    .action-icon-btn:hover {
+        background: rgba(99, 102, 241, 0.1);
     }
 </style>
 
-<!-- Floating Background Elements -->
-<div id="tag-container"></div>
-
-<div class="relative z-10 max-w-7xl mx-auto px-6 py-10">
+<div class="max-w-7xl mx-auto px-6 py-12">
     <!-- Header Section -->
-    <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 animate-up">
         <div>
-            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 opacity-80">System / Management</p>
-            <h2 class="text-4xl font-black tracking-tight mt-1">Quản Lý Khoa</h2>
+            <div class="flex items-center gap-3 mb-2">
+                <span class="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-500 text-[10px] font-black uppercase tracking-widest">
+                    Academic Management
+                </span>
+            </div>
+            <h2 class="text-4xl font-black tracking-tight dark:text-white text-slate-900">
+                Quản lý <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">Khoa</span>
+            </h2>
+            <p class="text-slate-500 dark:text-gray-400 mt-2 font-medium">Tổ chức bộ máy và quản trị danh mục đơn vị học thuật.</p>
         </div>
         
-        <div class="flex gap-3">
-            <button id="theme-toggle">
-                <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path id="theme-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=""></path>
-                </svg>
-            </button>
-        </div>
+        <button id="theme-toggle" class="p-3 glass-panel hover:scale-110 active:scale-95 text-indigo-500 dark:text-yellow-400 transition-all">
+            <svg id="theme-svg" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path id="theme-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=""></path>
+            </svg>
+        </button>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        <!-- Form Column -->
-        <div class="lg:col-span-4">
-            <div class="glass-card p-8">
-                 <div class="flex items-center gap-4 mb-8">
-                            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
-                                <i class="fas ${isUpdate ? 'fa-edit' : 'fa-plus-circle'} text-indigo-400 text-xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold">
-                                ${isUpdate ? 'Cập Nhật Thông Tin' : 'Thêm  Khoa Mới'}
-                            </h3>
-                        </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <!-- FORM SECTION -->
+        <div class="lg:col-span-4 animate-up" style="animation-delay: 0.1s">
+            <div class="glass-panel p-8 sticky top-10">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="p-3 rounded-2xl bg-indigo-500/10 text-indigo-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold">${isUpdate ? 'Cập nhật Khoa' : 'Thêm Khoa mới'}</h3>
+                </div>
 
                 <form action="department" method="post" class="space-y-6">
                     <input type="hidden" name="action" value="${isUpdate ? 'update' : 'add'}" />
@@ -211,57 +154,69 @@
                         <input type="hidden" name="id" value="${department.id}" />
                     </c:if>
                     
-                    <div>
-                        <label class="block text-[10px] font-black uppercase tracking-wider mb-2 ml-1 opacity-60">Tên Khoa</label>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Tên khoa</label>
                         <input type="text" name="departmentname" value="${department.departmentname}" 
-                               class="input-field w-full px-5 py-4 rounded-xl outline-none" 
+                               class="modern-input w-full px-5 py-4 rounded-2xl outline-none text-base" 
                                required placeholder="VD: Công nghệ thông tin">
                     </div>
 
-                    <button type="submit" class="btn-primary w-full py-4 rounded-xl font-bold uppercase tracking-widest active:scale-95">
-                        ${isUpdate ? 'Lưu Thay Đổi' : 'Xác Nhận Thêm'}
+                    <button type="submit" class="btn-gradient w-full py-4 rounded-2xl font-bold text-white shadow-xl uppercase tracking-widest text-sm">
+                        ${isUpdate ? 'Lưu thay đổi' : 'Xác nhận thêm'}
                     </button>
                     
                     <c:if test="${isUpdate}">
-                        <a href="department" class="block text-center text-[10px] font-black text-indigo-400 hover:text-indigo-300 uppercase tracking-widest mt-4">
-                            <i class="fas fa-times mr-2"></i>Hủy Bỏ Thay Đổi
+                        <a href="department" class="block text-center text-xs font-bold text-slate-500 hover:text-indigo-500 transition-colors mt-4 uppercase tracking-tighter">
+                            Hủy bỏ chỉnh sửa
                         </a>
                     </c:if>
                 </form>
             </div>
         </div>
 
-        <!-- Table Column -->
-        <div class="lg:col-span-8">
-            <div class="glass-card overflow-hidden">
-                <div class="p-6 border-b border-white/5 bg-white/5 flex justify-between items-center">
-                    <h3 class="text-lg font-bold">Danh Sách Khoa</h3>
-                    <div class="text-[10px] font-bold px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full uppercase tracking-widest">
-                        Department Data
-                    </div>
+        <!-- TABLE SECTION -->
+        <div class="lg:col-span-8 animate-up" style="animation-delay: 0.2s">
+            <div class="glass-panel table-container">
+                <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                    <h3 class="text-lg font-bold">Danh sách đơn vị</h3>
+                    <span class="px-3 py-1 bg-white/5 rounded-lg text-xs font-mono text-slate-400">Total: ${list.size()}</span>
                 </div>
                 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full custom-table">
                         <thead>
-                            <tr class="text-[10px] font-black uppercase tracking-widest border-b border-white/5 opacity-50">
-                                <th class="px-6 py-5">STT</th>
-                                <th class="px-6 py-5">Tên Khoa</th>
-                                <th class="px-6 py-5 text-right">Thao tác</th>
+                            <tr class="text-slate-400 text-[11px] font-black uppercase tracking-[0.2em]">
+                                <th class="px-8 py-5 text-left w-20">ID</th>
+                                <th class="px-8 py-5 text-left">Tên đơn vị Khoa</th>
+                                <th class="px-8 py-5 text-right">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
                             <c:forEach var="d" items="${list}" varStatus="loop">
-                                <tr class="hover:bg-indigo-500/5 transition-colors group">
-                                    <td class="px-6 py-4 font-mono text-indigo-500 font-bold">#${loop.index + 1}</td>
-                                    <td class="px-6 py-4 font-bold text-lg">${d.departmentname}</td>
-                                    <td class="px-6 py-4 text-right space-x-4">
-                                        <a href="department?action=edit&id=${d.id}" class="text-[10px] font-black text-indigo-400 hover:text-indigo-300 transition uppercase tracking-tighter">
-                                            <i class="fas fa-edit mr-1"></i> Sửa
-                                        </a>
-                                        <a href="department?action=delete&id=${d.id}" onclick="return confirm('Xóa khoa này?')" class="text-[10px] font-black text-red-500/70 hover:text-red-500 transition uppercase tracking-tighter">
-                                            <i class="fas fa-trash mr-1"></i> Xóa
-                                        </a>
+                                <tr class="table-row-animate group">
+                                    <td class="px-8 py-5">
+                                        <span class="text-indigo-500 font-mono font-bold">#${loop.index + 1}</span>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <div class="font-bold text-base group-hover:text-indigo-400 transition-colors">
+                                            ${d.departmentname}
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-right">
+                                        <div class="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                                            <a href="department?action=edit&id=${d.id}" class="action-icon-btn text-indigo-500 hover:bg-indigo-500/10" title="Chỉnh sửa">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                            </a>
+                                            <a href="department?action=delete&id=${d.id}" 
+                                               onclick="return confirm('Bạn có chắc chắn muốn xóa khoa này không?')" 
+                                               class="action-icon-btn text-red-500 hover:bg-red-500/10" title="Xóa">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -274,9 +229,10 @@
 </div>
 
 <script>
-    // --- THEME LOGIC (Synced with Student Animation) ---
     const themeBtn = document.getElementById('theme-toggle');
     const themePath = document.getElementById('theme-path');
+
+    // SVG Paths cho biểu tượng
     const sunPath = "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z";
     const moonPath = "M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z";
 
@@ -284,14 +240,13 @@
         if (isLight) {
             document.body.classList.add('light-mode');
             themePath.setAttribute('d', sunPath);
-            themeBtn.style.transform = "rotate(360deg)";
         } else {
             document.body.classList.remove('light-mode');
             themePath.setAttribute('d', moonPath);
-            themeBtn.style.transform = "rotate(0deg)";
         }
     }
 
+    // Load trạng thái từ localStorage
     const savedTheme = localStorage.getItem('theme') === 'light';
     updateThemeUI(savedTheme);
 
@@ -301,55 +256,6 @@
         localStorage.setItem('theme', nextThemeIsLight ? 'light' : 'dark');
         updateThemeUI(nextThemeIsLight);
     });
-
-    // --- FLOATING TAGS ANIMATION ---
-    const tagNames = ["IT", "Business", "Language", "Marketing", "Engineering", "Design", "FPTU", "Department", "Admin"];
-    const container = document.getElementById('tag-container');
-    const tagsArr = [];
-    const mousePos = { x: -1000, y: -1000 };
-
-    window.addEventListener('mousemove', (e) => { mousePos.x = e.clientX; mousePos.y = e.clientY; });
-
-    function TagObj(name) {
-        this.element = document.createElement('div');
-        this.element.className = 'floating-tag';
-        this.element.innerText = name;
-        container.appendChild(this.element);
-        this.x = Math.random() * window.innerWidth;
-        this.y = Math.random() * window.innerHeight;
-        this.vx = (Math.random() - 0.5) * 1.5;
-        this.vy = (Math.random() - 0.5) * 1.5;
-    }
-
-    TagObj.prototype.update = function() {
-        const dx = this.x - mousePos.x;
-        const dy = this.y - mousePos.y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 150) {
-            this.x += (dx/dist) * 2;
-            this.y += (dy/dist) * 2;
-        }
-        this.x += this.vx; this.y += this.vy;
-        if (this.x < -100) this.x = window.innerWidth + 100;
-        if (this.x > window.innerWidth + 100) this.x = -100;
-        if (this.y < -100) this.y = window.innerHeight + 100;
-        if (this.y > window.innerHeight + 100) this.y = -100;
-        
-        this.element.style.transform = `translate(\${this.x}px, \${this.y}px)`;
-    };
-
-    function initTags() {
-        const count = window.innerWidth < 768 ? 10 : 20;
-        for(let i=0; i<count; i++) tagsArr.push(new TagObj(tagNames[i % tagNames.length]));
-    }
-
-    function animateTags() {
-        tagsArr.forEach(t => t.update());
-        requestAnimationFrame(animateTags);
-    }
-
-    initTags();
-    animateTags();
 </script>
 
 <%@ include file="common/footer.jsp" %>
