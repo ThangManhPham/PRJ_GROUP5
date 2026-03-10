@@ -38,12 +38,6 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
 
     if (user != null) {
 
-        if (user.getRole() == 3) {
-            request.setAttribute("error", "You have no permission to access this function!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
-
         // Xóa session cũ
         HttpSession oldSession = request.getSession(false);
         if (oldSession != null) {
@@ -54,6 +48,22 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         HttpSession session = request.getSession(true);
         session.setAttribute("user", user);
         session.setMaxInactiveInterval(30 * 60);
+
+        // Nếu role = 3 thì chuyển sang trang guest.jsp
+        if (user.getRole() == 3) {
+            if ("true".equals(remember)) {
+                Cookie cookie = new Cookie("rememberUser", username);
+                cookie.setMaxAge(7 * 24 * 60 * 60);
+                cookie.setHttpOnly(true);
+                response.addCookie(cookie);
+            } else {
+                Cookie cookie = new Cookie("rememberUser", "");
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            }
+            response.sendRedirect("guest.jsp");
+            return;
+        }
 
         // ===== REMEMBER ME =====
         if ("true".equals(remember)) {
@@ -70,7 +80,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         response.sendRedirect("student");
 
     } else {
-        request.setAttribute("error", "Username or password is invalid!");
+        request.setAttribute("error", "Tài khoản hoặc mật khẩu không đúng!");
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 }

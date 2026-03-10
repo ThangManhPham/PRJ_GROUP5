@@ -1,9 +1,10 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Denied - Group 5 System</title>
+    <title>T? Ch?i Truy C?p - H? Th?ng Nh�m 5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -97,7 +98,7 @@
         }
 
         .light .glass-card {
-            border-width: 3px; /* Vi?n d�y h?n ? Light Mode */
+            border-width: 3px; /* Vi?n d�y h?n ? Light Mode */
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
@@ -157,7 +158,7 @@
 
         .light .secondary-btn {
             background: #ffffff;
-            border: 2.5px solid #4f46e5; /* Vi?n xanh ??m r� r�ng ? Light Mode */
+            border: 2.5px solid #4f46e5; /* Vi?n xanh ??m r� r�ng ? Light Mode */
             color: #4f46e5;
         }
 
@@ -220,17 +221,17 @@
                 <i class="fas fa-shield-virus"></i>
             </div>
 
-            <h1 class="text-3xl mb-3 tracking-tight theme-text-main">Access Denied</h1>
+            <h1 class="text-3xl mb-3 tracking-tight theme-text-main">Không Có Quyền Truy Cập</h1>
             <p class="theme-text-sub mb-10 leading-relaxed px-4">
-                Sorry! You do not have permission to access this area. Please contact the administrator or return to the previous page.
+                Xin lỗi, bạn không có quyền truy cập khu vực nàyy. Vui lòng liên hệ quảng trị viên hoặc quay lại trang trước!!.
             </p>
 
             <div class="flex flex-col space-y-0">
                 <a href="logout" class="btn-base primary-btn">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Back to Login Page
+                    <i class="fas fa-sign-out-alt mr-2"></i> Quay Lại Trang Đăng Nhập
                 </a>
                 <a href="javascript:history.back()" class="btn-base secondary-btn">
-                    <i class="fas fa-arrow-left mr-2"></i> Go Back Now
+                    <i class="fas fa-arrow-left mr-2"></i> Quay Lại Trang Trước
                 </a>
             </div>
 

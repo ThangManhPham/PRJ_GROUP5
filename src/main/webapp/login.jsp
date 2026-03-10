@@ -35,7 +35,8 @@
             flex-direction: column;
             transition: background 0.5s ease;
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         body.light { background: var(--bg-gradient-light); }
@@ -181,16 +182,107 @@
         #themeIcon { transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
         body.light #themeIcon { transform: rotate(-180deg); }
 
-      .content-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .divider-text {
+            padding: 0 12px;
+            color: var(--text-sub);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 0;
+            border-radius: 16px;
+            display: block;
+            overflow: hidden;
+            background: transparent;
+            border: none;
+        }
+
+        .content-wrapper {
+    position: relative;
     width: 100%;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
     z-index: 1;
+    padding: 20px;
+    box-sizing: border-box;
 }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.5);
+        }
+
+        .light ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .light ::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.4);
+        }
+
+        .light ::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .glass-card {
+                margin: 20px;
+                padding: 30px;
+                max-width: none;
+                width: calc(100% - 40px);
+            }
+
+            .content-wrapper {
+                padding: 10px;
+                min-height: auto;
+                padding-top: 60px;
+                padding-bottom: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 25px;
+                margin: 10px;
+                width: calc(100% - 20px);
+            }
+
+            .content-wrapper {
+                padding: 5px;
+            }
+        }
     </style>
 </head>
 <body class="dark">
@@ -213,7 +305,25 @@
                 <p class="theme-text-sub font-light italic text-sm">Chào mừng đến với thành viên Nhóm 5</p>
             </div>
 
-            <form action="#" method="post" class="space-y-5">
+            <% if (request.getAttribute("warning") != null) { %>
+                <div class="bg-yellow-600/30 border-2 border-yellow-400 rounded-lg p-4 mb-5 animate-pulse">
+                    <p class="text-yellow-300 text-base font-bold flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-3 text-lg"></i>
+                        <%= request.getAttribute("warning") %>
+                    </p>
+                </div>
+            <% } %>
+
+            <% if (request.getAttribute("error") != null) { %>
+                <div class="bg-red-600/30 border-2 border-red-400 rounded-lg p-4 mb-5 animate-pulse">
+                    <p class="text-red-400 text-base font-bold flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-3 text-lg"></i>
+                        <%= request.getAttribute("error") %>
+                    </p>
+                </div>
+            <% } %>
+
+            <form action="${pageContext.request.contextPath}/login" method="post" class="space-y-5">
                 <div class="space-y-2">
                     <label class="text-[10px] font-black uppercase tracking-[0.2em] ml-1 theme-text-sub">Tài khoản FE (Email)</label>
                     <input type="text" name="username" placeholder="nhannvhe123" class="input-box" required>
@@ -231,7 +341,7 @@
 
                 <div class="flex items-center justify-between text-xs px-1">
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" name="remember" class="w-4 h-4 rounded border-indigo-300 bg-transparent text-indigo-600 focus:ring-0">
+                        <input type="checkbox" name="remember" value="true" class="w-4 h-4 rounded border-indigo-300 bg-transparent text-indigo-600 focus:ring-0">
                         <span class="theme-text-sub group-hover:theme-text-main transition-colors">Ghi nhớ đăng nhập</span>
                     </label>
                     <a href="#" class="theme-text-sub hover:text-indigo-500 transition-colors font-bold">Quên mật khẩu</a>
@@ -241,6 +351,13 @@
                     <button type="submit" class="btn-base login-btn">đăng nhập ngay</button>
                     <a href="${pageContext.request.contextPath}/register" class="btn-base register-btn">Tạo tài khoảng</a>
                 </div>
+
+                <div class="divider">
+                    <span class="divider-text">HOẶC</span>
+                </div>
+
+                <div class="google-btn"></div>
+                   
             </form>
             
             <div class="mt-8 pt-6 border-t border-indigo-500/10 text-center">
@@ -249,7 +366,9 @@
         </div>
     </div>
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
+
         function toggleTheme() {
             const body = document.body;
             const path = document.getElementById('iconPath');
@@ -272,6 +391,50 @@
                 passInput.type = "password";
                 eyeIcon.classList.replace("fa-eye-slash", "fa-eye");
             }
+        }
+
+        function handleGoogleSignIn() {
+
+    google.accounts.id.initialize({
+        client_id: '991279627816-vehv4inre0nn7i6nh1gohi5nb3s8ee4t.apps.googleusercontent.com',
+        callback: handleCredentialResponse
+    });
+
+    google.accounts.id.renderButton(
+        document.querySelector('.google-btn'),
+        {
+            theme: 'filled_black',
+            size: 'large',
+            shape: 'pill',
+            text: 'signin_with',
+            logo_alignment: 'left',
+            width: 350
+        }
+    );
+}
+
+window.addEventListener("load", handleGoogleSignIn);
+
+        function handleCredentialResponse(response) {
+            // Gửi token tới backend
+            fetch('${pageContext.request.contextPath}/login-google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'idToken=' + encodeURIComponent(response.credential)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '${pageContext.request.contextPath}/student';
+                } else if (data.warning) {
+                    window.location.href = '${pageContext.request.contextPath}/guest.jsp';
+                } else {
+                    alert('Có lỗi khi đăng nhập với Google');
+                }
+            })
+            .catch(error => console.error('Lỗi:', error));
         }
 
         // --- H? TH?NG TAG V?I MÔN H?C SE FPTU ---
@@ -375,6 +538,9 @@
                 if (tags[i].y > window.innerHeight) tags[i].y = Math.random() * window.innerHeight;
             }
         });
+ 
     </script>
 </body>
-</html>
+</html> 
+   
+       
