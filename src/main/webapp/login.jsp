@@ -205,32 +205,12 @@
 
         .google-btn {
             width: 100%;
-            padding: 14px;
+            padding: 0;
             border-radius: 16px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            text-decoration: none;
-        }
-
-        .light .google-btn {
-            background: rgba(255, 255, 255, 0.7);
-            border-color: rgba(16, 185, 129, 0.3);
-        }
-
-        .google-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #10b981;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
+            display: block;
+            overflow: hidden;
+            background: transparent;
+            border: none;
         }
 
         .content-wrapper {
@@ -378,7 +358,6 @@
 
                 <div class="google-btn"></div>
                    
-                </button>
             </form>
             
             <div class="mt-8 pt-6 border-t border-indigo-500/10 text-center">
@@ -424,8 +403,11 @@
     google.accounts.id.renderButton(
         document.querySelector('.google-btn'),
         {
-            theme: 'outline',
+            theme: 'filled_black',
             size: 'large',
+            shape: 'pill',
+            text: 'signin_with',
+            logo_alignment: 'left',
             width: 350
         }
     );
@@ -447,24 +429,7 @@ window.addEventListener("load", handleGoogleSignIn);
                 if (data.success) {
                     window.location.href = '${pageContext.request.contextPath}/student';
                 } else if (data.warning) {
-                    // Hiển thị warning message và ở lại trang login
-                    const warningDiv = document.createElement('div');
-                    warningDiv.className = 'bg-yellow-600/30 border-2 border-yellow-400 rounded-lg p-4 mb-5 animate-pulse';
-                    warningDiv.innerHTML = `
-                        <p class="text-yellow-300 text-base font-bold flex items-center">
-                            <i class="fas fa-exclamation-triangle mr-3 text-lg"></i>
-                            ${data.warning}
-                        </p>
-                    `;
-
-                    // Thêm warning vào đầu form
-                    const form = document.querySelector('form');
-                    form.insertBefore(warningDiv, form.firstChild);
-
-                    // Tự động ẩn warning sau 5 giây
-                    setTimeout(() => {
-                        warningDiv.remove();
-                    }, 5000);
+                    window.location.href = '${pageContext.request.contextPath}/guest.jsp';
                 } else {
                     alert('Có lỗi khi đăng nhập với Google');
                 }
