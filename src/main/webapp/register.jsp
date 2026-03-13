@@ -365,7 +365,7 @@
 
         function handleGoogleSignUpResponse(response) {
             // Gửi token tới backend
-            fetch('${pageContext.request.contextPath}/auth/google-register', {
+            fetch('${pageContext.request.contextPath}/login-google', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -374,7 +374,7 @@
             })
             .then(res => res.json())
             .then(data => {
-                if (data.success) {
+                if (data.success || data.warning) {
                     window.location.href = '${pageContext.request.contextPath}/guest.jsp';
                 } else {
                     alert('Có lỗi khi đăng ký với Google: ' + (data.message || 'Vui lòng thử lại'));

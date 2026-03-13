@@ -4,6 +4,7 @@
  */
 package listener;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionBindingEvent;
 import jakarta.servlet.annotation.WebListener;
@@ -20,6 +21,11 @@ public class LoginListener implements HttpSessionAttributeListener {
     public void attributeAdded(HttpSessionBindingEvent event) {
 
         if ("user".equals(event.getName())) {
+            ServletContext context = event.getSession().getServletContext();
+            Object current = context.getAttribute("onlineUsers");
+            int onlineUsers = current instanceof Integer ? (Integer) current : 0;
+            onlineUsers++;
+            context.setAttribute("onlineUsers", onlineUsers);
 
             System.out.println("User logged in: " + event.getValue());
         }
@@ -29,6 +35,11 @@ public class LoginListener implements HttpSessionAttributeListener {
     public void attributeRemoved(HttpSessionBindingEvent event) {
 
         if ("user".equals(event.getName())) {
+            ServletContext context = event.getSession().getServletContext();
+            Object current = context.getAttribute("onlineUsers");
+            int onlineUsers = current instanceof Integer ? (Integer) current : 0;
+            onlineUsers = Math.max(0, onlineUsers - 1);
+            context.setAttribute("onlineUsers", onlineUsers);
 
             System.out.println("User logged out: " + event.getValue());
         }
@@ -38,8 +49,9 @@ public class LoginListener implements HttpSessionAttributeListener {
     public void attributeReplaced(HttpSessionBindingEvent event) {
 
         if ("user".equals(event.getName())) {
-
-            System.out.println("User changed session: " + event.getValue());
+            Object oldValue = event.getValue();
+            Object newValue = event.getSession().getAttribute(event.getName());
+            System.out.println("User replaced. Old=" + oldValue + " New=" + newValue);
         }
     }
 }

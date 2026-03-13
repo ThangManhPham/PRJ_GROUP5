@@ -349,7 +349,7 @@
 
                 <div class="pt-2">
                     <button type="submit" class="btn-base login-btn">đăng nhập ngay</button>
-                    <a href="${pageContext.request.contextPath}/register" class="btn-base register-btn">Tạo tài khoảng</a>
+                    <a href="${pageContext.request.contextPath}/register" class="btn-base register-btn">Tạo tài khoản</a>
                 </div>
 
                 <div class="divider">

@@ -15,7 +15,6 @@ import jakarta.persistence.Persistence;
  */
 public class JPAUtil {
 
-    // TẠO DUY NHẤT 1 LẦN
     private static final EntityManagerFactory emf =
             Persistence.createEntityManagerFactory("PRJ_Group5_PU");
 

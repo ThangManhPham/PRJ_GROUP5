@@ -20,6 +20,7 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "studentid")
     private String studentId;
     private String name;
     private double gpa;
@@ -28,8 +29,11 @@ public class Student {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    @Column(name = "created_by")
     private String createdBy;
 
     // ===== Getter & Setter =====

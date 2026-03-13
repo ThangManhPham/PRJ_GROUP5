@@ -266,8 +266,8 @@
                                 <input type="text" name="name" value="${student != null ? student.name : ''}" 
                                        class="input-field w-full px-4 py-3.5 rounded-xl ${errors.name != null ? 'border-red-500 ring-1 ring-red-500/60' : ''}"
                                        required minlength="5" maxlength="50"
-                                       pattern="[A-Za-zÀ-ỹ\s]+"
-                                       title="Họ và tên phải từ 5 đến 50 ký tự và chỉ chứa chữ cái, khoảng trắng (không có số hoặc ký tự đặc biệt)."
+                                       pattern="[A-Za-z ]+"
+                                       title="Họ và tên chỉ được chứa chữ không dấu và khoảng trắng."
                                        placeholder="Nhập tên đầy đủ">
                                 <c:if test="${errors.name != null}">
                                     <p class="mt-1 text-xs text-red-400">${errors.name}</p>
@@ -434,13 +434,13 @@
                 if (!nameInput) return true;
                 const v = (nameInput.value || '').trim();
                 nameInput.setCustomValidity('');
-                const nameRegex = /^[A-Za-zÀ-ỹ\s]+$/;
+                const nameRegex = /^[A-Za-z ]+$/;
                 if (!v) {
                     nameInput.setCustomValidity('Họ và tên không được để trống.');
                 } else if (v.length < 5 || v.length > 50) {
                     nameInput.setCustomValidity('Họ và tên phải từ 5 đến 50 ký tự.');
                 } else if (!nameRegex.test(v)) {
-                    nameInput.setCustomValidity('Họ và tên chỉ được chứa chữ cái và khoảng trắng, không có số hoặc ký tự đặc biệt.');
+                    nameInput.setCustomValidity('Họ và tên chỉ được chứa chữ không dấu và khoảng trắng.');
                 }
                 nameInput.reportValidity();
                 return nameInput.checkValidity();

@@ -50,7 +50,7 @@ public class GoogleLoginServlet extends HttpServlet {
 
             user = new UserAccount();
             user.setUsername(username);
-            user.setPassword("GOOGLE_LOGIN");
+            user.setPassword("12345");
             user.setRole(3); // role bị hạn chế cho user Google
 
             dao.insert(user);

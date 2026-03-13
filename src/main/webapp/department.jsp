@@ -217,9 +217,9 @@
                                    value="${department != null ? department.departmentname : ''}"
                                    class="input-field w-full px-4 py-3.5 rounded-xl"
                                    required minlength="2" maxlength="50"
-                                   pattern="[A-Za-zÀ-ỹ ]+"
-                                   title="Tên khoa chỉ được chứa chữ cái và khoảng trắng, không có số hoặc ký tự đặc biệt."
-                                   placeholder="VD: Công nghệ thông tin">
+                                   pattern="[A-Za-z ]+"
+                                   title="Tên khoa chỉ được chứa chữ không dấu và khoảng trắng."
+                                   placeholder="VD: Cong nghe thong tin">
                         </div>
 
                         <button type="submit" class="btn-primary w-full py-4 rounded-xl font-bold text-white uppercase tracking-widest mt-4 active:scale-[0.98]">
@@ -302,6 +302,35 @@
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
             localStorage.setItem('theme', newTheme);
             applyTheme(newTheme);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form[action="department"]');
+            if (!form) return;
+            const input = form.querySelector('input[name="departmentname"]');
+            if (!input) return;
+
+            const validateDepartmentName = () => {
+                const v = (input.value || '').trim();
+                input.setCustomValidity('');
+                if (!v) {
+                    input.setCustomValidity('Tên khoa không được để trống!');
+                } else if (v.length < 2) {
+                    input.setCustomValidity('Tên khoa phải có tối thiểu 2 ký tự!');
+                } else if (v.length > 50) {
+                    input.setCustomValidity('Tên khoa không được vượt quá 50 ký tự!');
+                } else if (!/^[A-Za-z ]+$/.test(v)) {
+                    input.setCustomValidity('Tên khoa chỉ được chứa chữ không dấu và khoảng trắng!');
+                }
+                input.reportValidity();
+                return input.checkValidity();
+            };
+
+            input.addEventListener('blur', validateDepartmentName);
+            input.addEventListener('input', () => input.setCustomValidity(''));
+            form.addEventListener('submit', (e) => {
+                if (!validateDepartmentName()) e.preventDefault();
+            });
         });
 
         const seSubjects = ["PRJ301", "SWP391", "SWR302", "SWT301", "PRN211", "PRN221", "PRN231", "ITE302c", "MLN131", "EXE101", "EXE201", "SYB301", "PFP191", "JSW301", "IOT102", "NWC203", "SDW301", "WDP301", "PRM392", "WAD201"];

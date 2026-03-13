@@ -3,8 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package listener;
-
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
 import jakarta.servlet.annotation.WebListener;
@@ -19,27 +17,11 @@ public class OnlineUserListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-
-        ServletContext context = se.getSession().getServletContext();
-
-        int onlineUsers = (int) context.getAttribute("onlineUsers");
-        onlineUsers++;
-
-        context.setAttribute("onlineUsers", onlineUsers);
-
-        System.out.println("User connected. Online users: " + onlineUsers);
+        System.out.println("Session created: " + se.getSession().getId());
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-
-        ServletContext context = se.getSession().getServletContext();
-
-        int onlineUsers = (int) context.getAttribute("onlineUsers");
-        onlineUsers--;
-
-        context.setAttribute("onlineUsers", onlineUsers);
-
-        System.out.println("User disconnected. Online users: " + onlineUsers);
+        System.out.println("Session destroyed: " + se.getSession().getId());
     }
 }

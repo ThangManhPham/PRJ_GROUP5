@@ -127,8 +127,8 @@ public class StudentServlet extends HttpServlet {
             int len = trimmed.length();
             if (len < 5 || len > 50) {
                 errors.put("name", "Họ và tên phải từ 5 đến 50 ký tự.");
-            } else if (!trimmed.matches("^[\\p{L} ]+$")) {
-                errors.put("name", "Họ và tên chỉ được chứa chữ cái và khoảng trắng, không có số hoặc ký tự đặc biệt.");
+            } else if (!trimmed.matches("^[A-Za-z ]+$")) {
+                errors.put("name", "Họ và tên chỉ được chứa chữ không dấu và khoảng trắng.");
             }
         }
 
@@ -175,8 +175,8 @@ public class StudentServlet extends HttpServlet {
             int len = trimmed.length();
             if (len < 5 || len > 50) {
                 errors.put("name", "Họ và tên phải từ 5 đến 50 ký tự.");
-            } else if (!trimmed.matches("^[\\p{L} ]+$")) {
-                errors.put("name", "Họ và tên chỉ được chứa chữ cái và khoảng trắng, không có số hoặc ký tự đặc biệt.");
+            } else if (!trimmed.matches("^[A-Za-z ]+$")) {
+                errors.put("name", "Họ và tên chỉ được chứa chữ không dấu và khoảng trắng.");
             }
         }
 
@@ -263,7 +263,7 @@ public class StudentServlet extends HttpServlet {
         s.setName(name.trim());
         s.setGpa(gpa);
         s.setDepartment(department);
-        s.setCreatedBy(user.getUsername());
+        s.setCreatedBy("staff");
 
         studentDAO.insert(s);
 
@@ -321,6 +321,7 @@ public class StudentServlet extends HttpServlet {
         existing.setName(name.trim());
         existing.setGpa(gpa);
         existing.setDepartment(department);
+        existing.setCreatedBy("staff");
 
         studentDAO.update(existing);
 

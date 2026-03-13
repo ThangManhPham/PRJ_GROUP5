@@ -58,6 +58,9 @@ public class StudentDAO {
             LocalDateTime now = LocalDateTime.now();
             s.setCreatedAt(now);
             s.setUpdatedAt(now); 
+            if (s.getCreatedBy() == null || s.getCreatedBy().trim().isEmpty()) {
+                s.setCreatedBy("staff");
+            }
             em.persist(s);
             tx.commit();
         } catch (Exception e) {
@@ -78,6 +81,9 @@ public class StudentDAO {
         try {
             tx.begin();
             s.setUpdatedAt(LocalDateTime.now());
+            if (s.getCreatedBy() == null || s.getCreatedBy().trim().isEmpty()) {
+                s.setCreatedBy("staff");
+            }
             em.merge(s);
             tx.commit();
         } catch (Exception e) {

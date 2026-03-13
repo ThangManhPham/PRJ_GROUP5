@@ -67,9 +67,8 @@ public class DepartmentServlet extends HttpServlet {
             return "Tên khoa không được vượt quá 50 ký tự!";
         }
 
-        // Chỉ cho phép chữ cái (kể cả tiếng Việt) và khoảng trắng
-        if (!trimmed.matches("^[\\p{L} ]+$")) {
-            return "Tên khoa chỉ được chứa chữ cái và khoảng trắng, không có số hoặc ký tự đặc biệt!";
+        if (!trimmed.matches("^[A-Za-z ]+$")) {
+            return "Tên khoa chỉ được chứa chữ không dấu và khoảng trắng!";
         }
 
         return null; // hợp lệ
