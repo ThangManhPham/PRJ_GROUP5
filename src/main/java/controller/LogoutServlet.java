@@ -14,26 +14,14 @@ public class LogoutServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Lấy session hiện tại (nếu có)
+        
         HttpSession session = request.getSession(false);
 
         if (session != null) {
-            session.invalidate(); // Hủy session
+            session.invalidate(); 
         }
 
-        // 2. Xóa cookie nếu có lưu username hoặc password
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("username") ||
-                    cookie.getName().equals("password")) {
 
-                    cookie.setValue("");
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
-                }
-            }
-        }
 
         // 3. Chống back sau logout
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
